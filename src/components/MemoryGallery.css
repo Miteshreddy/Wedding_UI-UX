@@ -1,0 +1,265 @@
+/* ═══════════════════════════════════════════════════
+   MemoryGallery.css — Mobile Optimized
+═══════════════════════════════════════════════════ */
+
+.gallery-section {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: max(2rem, calc(var(--sat) + 1rem)) max(1rem, var(--sar)) max(2rem, calc(var(--sab) + 1rem)) max(1rem, var(--sal));
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Semi-transparent newspaper tint for Chronicle atmosphere */
+.gallery-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(30, 22, 40, 0.55) 0%, rgba(8, 6, 14, 0.7) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.filter-def-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ─── Simple Editorial Gallery Header ────────────── */
+.gallery-editorial-header {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: clamp(0.8rem, 2vh, 1.4rem);
+  z-index: 10;
+  gap: 0.3rem;
+}
+
+.gallery-edition {
+  font-size: clamp(0.72rem, 2vw, 0.82rem);
+  color: var(--parchment-dark);
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+}
+
+.gallery-title {
+  font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+  color: var(--gold-light);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 25px rgba(201, 168, 76, 0.25);
+  margin: 0;
+}
+
+/* ─── Liquid Gallery Stage ───────────────────────── */
+.liquid-gallery-stage {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: clamp(310px, 46vh, 390px);
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+  outline: none;
+  touch-action: pan-y;
+}
+
+.liquid-card {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
+}
+
+.liquid-photo-frame {
+  position: relative;
+  width: 100%;
+  height: clamp(170px, 24vh, 230px);
+  background: #110d16;
+  border-radius: 3px;
+  border: 4px solid rgba(244, 232, 193, 0.55);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.75),
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(201, 168, 76, 0.1);
+  overflow: hidden;
+}
+
+.liquid-photo-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.liquid-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Film Grain Overlay */
+.liquid-grain-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image: radial-gradient(rgba(244, 232, 193, 0.5) 1px, transparent 0);
+  background-size: 4px 4px;
+  pointer-events: none;
+}
+
+/* Soft Lighting Sheen */
+.liquid-sheen-light {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 240, 200, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ─── Metadata Card ──────────────────────────────── */
+.liquid-card-meta {
+  width: 100%;
+  margin-top: clamp(0.5rem, 1.5vh, 0.9rem);
+  background: rgba(18, 14, 22, 0.8);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 4px;
+  padding: clamp(0.55rem, 1.8vw, 0.85rem) clamp(0.8rem, 2.5vw, 1.1rem);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.liquid-meta-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  padding-bottom: 0.2rem;
+}
+
+.liquid-meta-date {
+  font-size: clamp(0.72rem, 2vw, 0.8rem);
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+}
+
+.liquid-meta-place {
+  font-size: clamp(0.68rem, 1.8vw, 0.75rem);
+  color: var(--parchment-dark);
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+}
+
+.liquid-meta-title {
+  font-size: clamp(0.95rem, 3vw, 1.25rem);
+  color: var(--parchment);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.liquid-meta-caption {
+  font-size: clamp(0.76rem, 2.2vw, 0.84rem);
+  color: var(--parchment-dark);
+  opacity: 0.8;
+  line-height: 1.35;
+}
+
+/* ─── Constellation Progress Tracker ─────────────── */
+.liquid-progress-tracker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.6rem, 2.5vw, 1.2rem);
+  margin-top: clamp(1rem, 2vh, 1.8rem);
+  z-index: 20;
+}
+
+.tracker-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(201, 168, 76, 0.2);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.tracker-node {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  touch-action: manipulation;
+}
+
+.node-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.35);
+  transition: all 0.35s ease;
+}
+
+.node-glow {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0);
+  transition: all 0.35s ease;
+}
+
+.tracker-node--active .node-dot {
+  width: 9px;
+  height: 9px;
+  background: var(--gold-light);
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.8);
+}
+
+.tracker-node--active .node-glow {
+  background: rgba(201, 168, 76, 0.25);
+  transform: scale(1.4);
+}
+
+/* ─── Drag Hint ──────────────────────────────────── */
+.liquid-drag-hint {
+  font-size: clamp(0.68rem, 1.8vw, 0.78rem);
+  color: var(--gold);
+  opacity: 0.6;
+  margin-top: clamp(0.5rem, 1.2vh, 0.9rem);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .chronicle-masthead {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+}
