@@ -819,7 +819,7 @@ export default function MemoryGallery() {
 
       {/* Tactile Interaction Hint */}
       <p className="liquid-drag-hint t-handwritten" aria-hidden="true">
-        drag to distort
+        {('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'swipe to explore' : 'drag to distort'}
       </p>
     </section>
   );

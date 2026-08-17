@@ -502,6 +502,12 @@ export default function TimeKeeper() {
               transform={`rotate(${currentAngle}, 160, 160)`}
               filter="url(#handGlow)"
             >
+              {/* Invisible wider hit area for touch */}
+              <polygon
+                points="160,42 170,130 172,165 148,165 150,130"
+                fill="transparent"
+                stroke="none"
+              />
               <polygon
                 points="160,50 163,130 165,160 155,160 157,130"
                 fill="#f3dd90"

@@ -301,6 +301,8 @@ export default function RSVP() {
                 autoComplete="name"
                 required
                 aria-label="Your full name"
+                inputMode="text"
+                enterKeyHint="send"
               />
               <div className="ink-underline" aria-hidden="true" />
             </div>

@@ -3,14 +3,13 @@
 ═══════════════════════════════════════════════════ */
 
 .rsvp-section {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: auto;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: max(2rem, calc(var(--sat) + 1rem)) max(1rem, var(--sar)) max(2rem, calc(var(--sab) + 1rem)) max(1rem, var(--sal));
+  padding: clamp(1.2rem, 3vh, 2rem) max(1rem, var(--sar)) clamp(1.2rem, 3vh, 2rem) max(1rem, var(--sal));
   position: relative;
   overflow: hidden;
   background: transparent;

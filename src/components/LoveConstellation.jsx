@@ -64,7 +64,6 @@ export default function LoveConstellation() {
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
   const storyCardsRef = useRef([]);
-  const storyPanelsRef = useRef([]);
   const photoRef = useRef(null);
   const photoTextRef = useRef(null);
   const prefersReduced = useReducedMotion();
@@ -479,10 +478,13 @@ export default function LoveConstellation() {
 
     // GSAP ScrollTrigger timeline
     const gsapCtx = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
+      const scrollLength = isMobile ? '+=320%' : '+=450%';
+
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: 'top top',
-        end: '+=450%',
+        end: scrollLength,
         scrub: 1.2,
         pin: true,
         anticipatePin: 1,
@@ -500,7 +502,7 @@ export default function LoveConstellation() {
         ScrollTrigger.create({
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=450%',
+          end: scrollLength,
           scrub: 1,
           onUpdate: (self) => {
             const p = self.progress;
@@ -522,37 +524,11 @@ export default function LoveConstellation() {
         });
       });
 
-      // Story panels — human narrative floating over the canvas
-      MILESTONES.forEach((m, i) => {
-        const panel = storyPanelsRef.current[i];
-        if (!panel) return;
-
-        const xFrom = m.storyAlign === 'right' ? 30 : m.storyAlign === 'center' ? 0 : -30;
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: '+=450%',
-          scrub: 1,
-          onUpdate: (self) => {
-            const p = self.progress;
-            // Story panel appears slightly after the milestone node glows
-            const isVisible = p >= m.t - 0.02 && p < m.t + 0.22;
-            gsap.to(panel, {
-              opacity: isVisible ? 1 : 0,
-              x: isVisible ? 0 : xFrom,
-              y: isVisible ? 0 : 15,
-              duration: 0.45,
-              ease: 'power2.out',
-            });
-          },
-        });
-      });
-
       // Silhouette & finale caption on collision
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: 'top top',
-        end: '+=450%',
+        end: scrollLength,
         scrub: 1,
         onUpdate: (self) => {
           const show = self.progress > 0.85;
@@ -599,7 +575,7 @@ export default function LoveConstellation() {
       {/* Atmospheric vignette */}
       <div className="constellation-vignette" aria-hidden="true" />
 
-      {/* Floating Milestone Story Cards (constellation labels) */}
+      {/* Floating Unified Milestone Story Cards */}
       <div className="constellation-milestones" aria-live="polite">
         {MILESTONES.map((m, i) => (
           <div
@@ -612,32 +588,25 @@ export default function LoveConstellation() {
               <span className="milestone-spark" aria-hidden="true">
                 ✦
               </span>
-              <span className="milestone-date t-ink">{m.date}</span>
+              <span className="milestone-date t-display">{m.date}</span>
             </div>
             <h3 className="milestone-title t-display">{m.title}</h3>
             <p className="milestone-sub t-serif">{m.sub}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Human Story Panels — float OVER the constellation canvas */}
-      <div className="constellation-story-panels" aria-live="polite">
-        {MILESTONES.map((m, i) => (
-          <div
-            key={i}
-            ref={(el) => (storyPanelsRef.current[i] = el)}
-            className={`story-panel story-panel--${m.storyAlign} story-panel--${i}`}
-            aria-label={`Story moment: ${m.storyDate}`}
-          >
-            <span className="story-panel-date t-handwritten">{m.storyDate}</span>
-            {m.storyLines.map((line, j) => (
-              <p
-                key={j}
-                className={`story-panel-line t-serif ${j === m.storyLines.length - 1 ? 'story-panel-line--last' : ''}`}
-              >
-                {line}
-              </p>
-            ))}
+            <div className="milestone-divider" aria-hidden="true">
+              <span className="gold-rule" style={{ width: '40px', margin: '0.35rem 0' }} />
+            </div>
+            <div className="milestone-story">
+              {m.storyLines.map((line, j) => (
+                <p
+                  key={j}
+                  className={`milestone-story-line t-serif ${
+                    j === m.storyLines.length - 1 ? 'milestone-story-line--last' : ''
+                  }`}
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
           </div>
         ))}
       </div>

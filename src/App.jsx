@@ -46,6 +46,35 @@ export default function App() {
     };
   }, [updateScrollProgress]);
 
+  // Refresh ScrollTrigger on resize / orientation change / mobile viewport changes
+  useEffect(() => {
+    let refreshTimer;
+    const debouncedRefresh = () => {
+      clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+        updateScrollProgress();
+      }, 200);
+    };
+
+    window.addEventListener('resize', debouncedRefresh, { passive: true });
+    window.addEventListener('orientationchange', debouncedRefresh);
+
+    // Handle mobile browser UI changes (address bar show/hide)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', debouncedRefresh);
+    }
+
+    return () => {
+      clearTimeout(refreshTimer);
+      window.removeEventListener('resize', debouncedRefresh);
+      window.removeEventListener('orientationchange', debouncedRefresh);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', debouncedRefresh);
+      }
+    };
+  }, [updateScrollProgress]);
+
   const handleEnvelopeComplete = useCallback(() => {
     setEnvelopeOpened(true);
     // Refresh ScrollTrigger so all subsequent scenes calibrate

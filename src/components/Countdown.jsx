@@ -152,7 +152,7 @@ export default function Countdown() {
           aria-label="Time remaining until the wedding"
         >
           {[
-            { label: 'Days', value: timeLeft.days, id: 'days' },
+            { label: 'Days', value: pad(timeLeft.days), id: 'days' },
             { label: 'Hours', value: pad(timeLeft.hours), id: 'hours' },
             { label: 'Minutes', value: pad(timeLeft.minutes), id: 'minutes' },
             { label: 'Seconds', value: pad(timeLeft.seconds), id: 'seconds' },

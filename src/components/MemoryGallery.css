@@ -3,15 +3,14 @@
 ═══════════════════════════════════════════════════ */
 
 .gallery-section {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: auto;
   width: 100%;
   background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: max(2rem, calc(var(--sat) + 1rem)) max(1rem, var(--sar)) max(2rem, calc(var(--sab) + 1rem)) max(1rem, var(--sal));
+  padding: clamp(2.5rem, 5vh, 4rem) max(1rem, var(--sar)) clamp(2rem, 5vh, 3.5rem) max(1rem, var(--sal));
   position: relative;
   overflow: hidden;
   user-select: none;
@@ -91,7 +90,7 @@
 .liquid-photo-frame {
   position: relative;
   width: 100%;
-  height: clamp(170px, 24vh, 230px);
+  height: clamp(180px, 28vh, 230px);
   background: #110d16;
   border-radius: 3px;
   border: 4px solid rgba(244, 232, 193, 0.55);

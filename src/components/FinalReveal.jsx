@@ -132,12 +132,12 @@ export default function FinalReveal() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 75%',
-          end: 'bottom bottom',
-          scrub: 1.2,
+          start: 'top 85%',
+          end: 'bottom 90%',
+          scrub: 0.8,
           onUpdate: (self) => {
             vortexState.converge = self.progress;
-            if (self.progress > 0.4 && !soundTriggered) {
+            if (self.progress > 0.25 && !soundTriggered) {
               sound.playCelestialChime(432);
               soundTriggered = true;
             }
@@ -148,7 +148,7 @@ export default function FinalReveal() {
       if (line1Ref.current) {
         tl.fromTo(
           line1Ref.current,
-          { opacity: 0, y: 35, scale: 0.88, filter: 'blur(8px)' },
+          { opacity: 0, y: 25, scale: 0.9, filter: 'blur(6px)' },
           {
             opacity: 1,
             y: 0,
@@ -157,7 +157,7 @@ export default function FinalReveal() {
             duration: 0.25,
             ease: 'power2.out',
           },
-          0.1
+          0.05
         );
       }
 
@@ -166,10 +166,10 @@ export default function FinalReveal() {
           line2Ref.current,
           {
             opacity: 0,
-            y: 40,
-            scale: 0.8,
-            letterSpacing: '0.5em',
-            filter: 'blur(10px)',
+            y: 30,
+            scale: 0.85,
+            letterSpacing: '0.4em',
+            filter: 'blur(8px)',
           },
           {
             opacity: 1,
@@ -180,14 +180,14 @@ export default function FinalReveal() {
             duration: 0.35,
             ease: 'power3.out',
           },
-          0.22
+          0.18
         );
       }
 
       if (line3Ref.current) {
         tl.fromTo(
           line3Ref.current,
-          { opacity: 0, y: 25, filter: 'blur(6px)' },
+          { opacity: 0, y: 20, filter: 'blur(4px)' },
           {
             opacity: 1,
             y: 0,
@@ -195,16 +195,16 @@ export default function FinalReveal() {
             duration: 0.25,
             ease: 'power2.out',
           },
-          0.42
+          0.35
         );
       }
 
       if (line4Ref.current) {
         tl.fromTo(
           line4Ref.current,
-          { opacity: 0, y: 20 },
+          { opacity: 0, y: 15 },
           { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out' },
-          0.55
+          0.48
         );
       }
 
@@ -219,16 +219,16 @@ export default function FinalReveal() {
             duration: 0.2,
             ease: 'back.out(2)',
           },
-          0.65
+          0.58
         );
       }
 
       if (venueRef.current) {
         tl.fromTo(
           venueRef.current,
-          { opacity: 0, y: 15 },
+          { opacity: 0, y: 12 },
           { opacity: 0.85, y: 0, duration: 0.2, ease: 'power2.out' },
-          0.72
+          0.66
         );
       }
     }, sectionRef);

@@ -106,29 +106,40 @@ export default function EnvelopeIntro({ onComplete }) {
     };
   }, []);
 
-  // Scroll-responsive parchment: when user scrolls, parchment drifts up naturally
+  // Scroll-responsive parchment: when user scrolls, parchment immediately reacts with feedback
   useEffect(() => {
     if (phase !== 'opened') return;
     const parchment = fullParchmentRef.current;
     const bridge = inkBridgeRef.current;
+    const scrollCue = scrollCueRef.current;
     if (!parchment) return;
 
     const handler = () => {
       const scrollY = window.scrollY;
-      const vh = window.innerHeight;
-      const t = clampVal(scrollY / vh, 0, 1);
+      const vh = window.innerHeight || 800;
 
-      // Parchment drifts upward and scales down slightly
-      const yShift = t * -80;
-      const scaleShift = 1 - t * 0.06;
-      const opacityShift = 1 - t * 0.7;
+      // 1. Scroll cue fades smoothly on the very first few pixels of scroll (0-90px)
+      if (scrollCue) {
+        const cueOpacity = Math.max(0, 1 - scrollY / 80);
+        scrollCue.style.opacity = cueOpacity;
+        scrollCue.style.pointerEvents = cueOpacity < 0.1 ? 'none' : 'auto';
+        scrollCue.style.transform = `translateY(${Math.min(scrollY * 0.35, 25)}px)`;
+      }
+
+      // 2. Parchment drifts upward and fades out naturally as user scrolls into scene 2
+      const t = clampVal(scrollY / (vh * 0.65), 0, 1);
+      const yShift = -scrollY * 0.55;
+      const scaleShift = 1 - t * 0.08;
+      const opacityShift = Math.max(0, 1 - t * 0.95);
+
       parchment.style.transform = `translate(-50%, calc(-50% + ${yShift}px)) scale(${scaleShift})`;
       parchment.style.opacity = opacityShift;
+      parchment.style.pointerEvents = opacityShift < 0.1 ? 'none' : 'auto';
 
-      // Ink bridge grows visible as user scrolls
+      // 3. Ink bridge grows visible connecting downward to next section
       if (bridge) {
-        bridge.style.opacity = clampVal(t * 2.5, 0, 1);
-        bridge.style.transform = `scaleY(${clampVal(t * 1.8, 0, 1)})`;
+        bridge.style.opacity = clampVal(t * 2, 0, 1);
+        bridge.style.transform = `scaleY(${clampVal(t * 1.5, 0, 1)})`;
       }
     };
 
@@ -210,6 +221,16 @@ export default function EnvelopeIntro({ onComplete }) {
     };
     draw();
   }, [prefersReduced]);
+
+  // Smoothly scroll down when clicking/tapping the continuation cue
+  const handleCueClick = useCallback(() => {
+    const targetY = window.innerHeight || 800;
+    window.scrollTo({
+      top: targetY,
+      behavior: 'smooth',
+    });
+    sound.playCelestialChime(528);
+  }, []);
 
   // Master 14-Step Cinematic Opening Handler with Tactile Press Response
   const handleOpen = useCallback(() => {
@@ -467,13 +488,13 @@ export default function EnvelopeIntro({ onComplete }) {
       );
     }
 
-    // Scroll cue: the "continue the story" prompt
+    // Scroll cue: the prominent "CONTINUE THE STORY" prompt
     if (scrollCueRef.current) {
       masterTl.fromTo(
         scrollCueRef.current,
-        { opacity: 0, y: 18 },
-        { opacity: 1, y: 0, duration: 1.0, ease: 'power2.out' },
-        4.6
+        { opacity: 0, y: 22, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power2.out' },
+        4.4
       );
     }
 
@@ -835,24 +856,49 @@ export default function EnvelopeIntro({ onComplete }) {
           </p>
         </div>
 
-        {/* Scroll continuation cue — elegant invitation-style */}
-        <div ref={scrollCueRef} className="scroll-cue" aria-hidden="true">
-          <span className="scroll-cue-label t-handwritten">continue the story</span>
-          <svg
-            className="scroll-cue-ink-svg"
-            viewBox="0 0 2 60"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M1 0 L1 60"
-              stroke="var(--gold)"
-              strokeWidth="1"
-              fill="none"
-              strokeLinecap="round"
-              className="scroll-cue-ink-path"
-            />
-          </svg>
-          <span className="scroll-cue-nib">✦</span>
+        {/* Scroll continuation cue — prominent, elegant, animated visual guidance */}
+        <div
+          ref={scrollCueRef}
+          className="scroll-cue"
+          onClick={handleCueClick}
+          role="button"
+          tabIndex={0}
+          aria-label="Scroll down to continue the story"
+        >
+          <div className="scroll-cue-header">
+            <span className="scroll-cue-dash" aria-hidden="true">✦</span>
+            <span className="scroll-cue-text t-display">CONTINUE THE STORY</span>
+            <span className="scroll-cue-dash" aria-hidden="true">✦</span>
+          </div>
+
+          <div className="scroll-cue-trail" aria-hidden="true">
+            <svg
+              className="scroll-cue-trail-svg"
+              viewBox="0 0 24 52"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Animated flowing vertical line */}
+              <line
+                x1="12"
+                y1="2"
+                x2="12"
+                y2="38"
+                className="scroll-cue-line"
+              />
+              {/* Downward indicator chevron */}
+              <path
+                d="M7 32 L12 40 L17 32"
+                className="scroll-cue-chevron"
+              />
+              {/* Pulsing guidance dot */}
+              <circle
+                cx="12"
+                cy="46"
+                r="1.8"
+                className="scroll-cue-dot"
+              />
+            </svg>
+          </div>
         </div>
       </div>
 

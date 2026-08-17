@@ -173,3 +173,13 @@
   color: var(--parchment-dark);
   opacity: 0.8;
 }
+
+/* Short phones — tighten map card spacing */
+@media (max-height: 700px) and (max-width: 480px) {
+  .map-card {
+    padding: 0.55rem 0.75rem;
+  }
+  .map-svg {
+    height: min(78dvh, 580px);
+  }
+}

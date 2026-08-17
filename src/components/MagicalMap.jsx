@@ -110,11 +110,14 @@ export default function MagicalMap() {
         glowEl.style.strokeDashoffset = len;
       }
 
+      const isMobile = window.innerWidth < 768;
+      const scrollLength = isMobile ? '+=320%' : '+=450%';
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
-          end: '+=450%',
+          end: scrollLength,
           scrub: 1.2,
           pin: true,
           anticipatePin: 1,
