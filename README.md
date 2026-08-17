@@ -65,6 +65,30 @@ npm run preview
 
 ---
 
+## 🌐 Deploy to Vercel
+
+This repository is pre-configured and optimized for **Vercel** with:
+- Zero-config build pipeline (`framework: vite`)
+- Automated single-page application (SPA) routing rewrites
+- Immutable 1-year asset caching (`Cache-Control: public, max-age=31536000, immutable`)
+- Modern edge security headers (`X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`)
+- Production bundle chunk splitting (`vendor-react`, `vendor-gsap`)
+
+### 1-Click Deploy via Vercel Dashboard
+1. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
+2. Import the `Wedding_UI-UX` GitHub repository.
+3. Vercel will automatically detect Vite and settings from `vercel.json`.
+4. Click **Deploy**.
+
+### Deploy via Vercel CLI
+```bash
+npx vercel
+# For production deployment:
+npx vercel --prod
+```
+
+---
+
 ## 📁 Project Structure
 
 ```
