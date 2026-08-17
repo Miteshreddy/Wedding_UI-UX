@@ -339,7 +339,7 @@ export default function Countdown() {
           </p>
 
           <span className="countdown-location-hint t-serif">
-            {WEDDING.location.venue} · {WEDDING.location.city}
+            {WEDDING.venue?.name || 'The Grand Hall'} · {WEDDING.venue?.city || 'Edinburgh'}
           </span>
         </footer>
       </div>

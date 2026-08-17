@@ -16,6 +16,12 @@ export const WEDDING = {
     city: 'Edinburgh',
     full: 'The Grand Hall, Edinburgh',
   },
+  location: {
+    venue: 'The Grand Hall',
+    name: 'The Grand Hall',
+    city: 'Edinburgh',
+    full: 'The Grand Hall, Edinburgh',
+  },
   story: [
     {
       date: '14 FEBRUARY 2021',
