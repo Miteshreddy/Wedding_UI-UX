@@ -1,0 +1,247 @@
+/* ═══════════════════════════════════════════════════
+   TimeKeeper.css — Mobile Optimized
+═══════════════════════════════════════════════════ */
+
+.timekeeper-section {
+  min-height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.8rem, 4vh, 3rem) max(1rem, var(--sar)) clamp(1.5rem, 3.5vh, 2.5rem) max(1rem, var(--sal));
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+}
+
+/* Theme-specific ambient overlay on top of WorldCanvas */
+.timekeeper-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(12, 8, 4, 0.5) 0%, rgba(6, 4, 2, 0.68) 100%);
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.timekeeper-section.theme--ceremony::before {
+  background: radial-gradient(ellipse at 50% 40%, rgba(40, 28, 6, 0.55) 0%, rgba(12, 8, 2, 0.7) 100%);
+}
+.timekeeper-section.theme--celebration::before {
+  background: radial-gradient(ellipse at 50% 40%, rgba(28, 8, 28, 0.52) 0%, rgba(10, 5, 16, 0.7) 100%);
+}
+.timekeeper-section.theme--dinner::before {
+  background: radial-gradient(ellipse at 50% 40%, rgba(32, 14, 4, 0.52) 0%, rgba(12, 5, 2, 0.7) 100%);
+}
+.timekeeper-section.theme--dancing::before {
+  background: radial-gradient(ellipse at 50% 40%, rgba(6, 12, 30, 0.55) 0%, rgba(3, 5, 18, 0.7) 100%);
+}
+
+.timekeeper-particle-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.timekeeper-ambient-pool {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 700px);
+  height: min(90vw, 700px);
+  background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Header ─────────────────────────────────────── */
+.timekeeper-header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  margin-bottom: clamp(1rem, 2vh, 1.8rem);
+  max-width: 600px;
+  padding: 0 0.5rem;
+}
+
+.timekeeper-main-title {
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  color: var(--gold-light);
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 25px rgba(201, 168, 76, 0.35);
+}
+
+.timekeeper-sub-title {
+  font-size: clamp(0.78rem, 2.4vw, 0.95rem);
+  color: var(--parchment-dark);
+  opacity: 0.85;
+  letter-spacing: 0.03em;
+}
+
+/* ─── Stage (Clock + Info) ───────────────────────── */
+.timekeeper-stage {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.2rem, 3.5vw, 3.5rem);
+  width: 100%;
+  max-width: 960px;
+}
+
+/* ─── Magical Clock Wrap ─────────────────────────── */
+.magical-clock-wrap {
+  position: relative;
+  width: clamp(240px, 58vw, 330px);
+  height: clamp(240px, 58vw, 330px);
+  filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.9));
+  touch-action: none;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.magical-clock-wrap:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 6px;
+  border-radius: 50%;
+}
+
+.clock-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ─── Event Info Panel ───────────────────────────── */
+.timekeeper-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.5vh, 0.8rem);
+  max-width: 380px;
+  width: 100%;
+  background: rgba(20, 14, 10, 0.85);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  border-radius: 4px;
+  padding: clamp(1rem, 3vw, 1.6rem) clamp(1rem, 3.5vw, 1.8rem);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(244, 232, 193, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 0.25rem 0.8rem;
+  align-self: flex-start;
+  background: rgba(0, 0, 0, 0.4);
+  transition: all 0.4s ease;
+}
+
+.time-spark {
+  font-size: 0.75rem;
+}
+
+.time-label {
+  font-size: clamp(0.85rem, 2.4vw, 1.15rem);
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.event-title {
+  font-size: clamp(1.1rem, 3.2vw, 1.55rem);
+  color: var(--parchment);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.event-description {
+  font-size: clamp(0.78rem, 2.3vw, 0.92rem);
+  color: var(--parchment-dark);
+  opacity: 0.9;
+  line-height: 1.45;
+}
+
+/* ─── Selector Buttons ───────────────────────────── */
+.time-selector-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(0.4rem, 1.5vw, 0.6rem);
+  margin-top: 0.3rem;
+}
+
+.time-btn {
+  background: rgba(25, 18, 12, 0.75);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 4px;
+  padding: 0.55rem 0.7rem;
+  min-height: 48px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  touch-action: manipulation;
+}
+
+.time-btn:hover,
+.time-btn:focus-visible {
+  border-color: rgba(201, 168, 76, 0.6);
+  background: rgba(40, 28, 16, 0.85);
+  transform: translateY(-1px);
+}
+
+.time-btn--active {
+  background: rgba(45, 30, 16, 0.95);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.2);
+}
+
+.btn-time {
+  font-size: clamp(0.75rem, 2vw, 0.82rem);
+  letter-spacing: 0.08em;
+}
+
+.btn-name {
+  font-size: clamp(0.68rem, 1.8vw, 0.72rem);
+  color: var(--parchment);
+  opacity: 0.8;
+}
+
+/* ─── Hint ───────────────────────────────────────── */
+.timekeeper-hint {
+  font-family: var(--font-handwritten);
+  font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+  color: var(--gold-light);
+  opacity: 0.75;
+  margin-top: clamp(0.8rem, 2vh, 1.6rem);
+  letter-spacing: 0.02em;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  padding: 0 1rem;
+  max-width: min(92vw, 400px);
+}
+
+@media (max-width: 768px) {
+  .timekeeper-stage {
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+  .timekeeper-info-panel {
+    max-width: min(92vw, 380px);
+  }
+}

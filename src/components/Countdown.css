@@ -1,0 +1,406 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Countdown.css — Haute Horology & Celestial Masterpiece Plaque
+═══════════════════════════════════════════════════════════════════════════ */
+
+.countdown-section {
+  min-height: auto;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: clamp(2rem, 5vh, 4rem) max(1rem, var(--sar)) clamp(0.5rem, 1.5vh, 1.5rem) max(1rem, var(--sal));
+  overflow: hidden;
+  user-select: none;
+  perspective: 1200px;
+}
+
+.countdown-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(75, 45, 12, 0.25) 0%, rgba(5, 4, 8, 0.7) 80%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.countdown-wisp-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ─── Master Astronomical Plaque ────────────────────────────────────────── */
+.countdown-master-card {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1rem, 2.5vh, 1.6rem);
+  padding: clamp(2rem, 4.5vh, 3.2rem) clamp(1.2rem, 4vw, 3rem);
+  background: radial-gradient(135% 100% at 50% 0%, rgba(32, 22, 14, 0.94) 0%, rgba(14, 10, 7, 0.98) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 8px;
+  box-shadow:
+    0 0 80px rgba(201, 168, 76, 0.12),
+    0 30px 90px rgba(0, 0, 0, 0.9),
+    inset 0 1px 1px rgba(255, 240, 190, 0.35),
+    inset 0 -1px 1px rgba(100, 70, 20, 0.5);
+  max-width: min(94vw, 560px);
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.4s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.countdown-master-card::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px dashed rgba(212, 175, 55, 0.22);
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.countdown-master-card:hover {
+  box-shadow:
+    0 0 100px rgba(212, 175, 55, 0.2),
+    0 35px 100px rgba(0, 0, 0, 0.95),
+    inset 0 1px 2px rgba(255, 245, 210, 0.45);
+}
+
+/* ─── Ambient Glow Halo ─────────────────────────────────────────────────── */
+.card-ambient-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 16px;
+  filter: blur(25px);
+  pointer-events: none;
+  z-index: -1;
+  animation: glowPulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { opacity: 0.6; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1.02); }
+}
+
+/* ─── Victorian Corner Filigrees ────────────────────────────────────────── */
+.filigree-corner {
+  position: absolute;
+  width: clamp(28px, 6vw, 42px);
+  height: clamp(28px, 6vw, 42px);
+  pointer-events: none;
+  z-index: 5;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+}
+
+.filigree-corner svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.filigree-corner--tl { top: 6px; left: 6px; }
+.filigree-corner--tr { top: 6px; right: 6px; }
+.filigree-corner--bl { bottom: 6px; left: 6px; }
+.filigree-corner--br { bottom: 6px; right: 6px; }
+
+/* ─── Header & Astrolabe Crest ──────────────────────────────────────────── */
+.countdown-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: center;
+}
+
+.astronomical-crest {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crest-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed rgba(212, 175, 55, 0.6);
+  border-radius: 50%;
+  animation: spinAstrolabe 20s linear infinite;
+}
+
+.crest-star {
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  text-shadow: 0 0 12px var(--gold);
+  animation: starPulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes spinAstrolabe {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes starPulse {
+  0% { transform: scale(0.9); opacity: 0.75; }
+  100% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 8px #fff); }
+}
+
+.countdown-date-badge {
+  font-size: clamp(1.05rem, 3.2vw, 1.45rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5E5B8 40%, #D4AF37 80%, #9A7724 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.3));
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ─── Ornate Gold Dividers ──────────────────────────────────────────────── */
+.ornate-gold-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: min(80%, 280px);
+  margin: 0.2rem 0;
+}
+
+.divider-flourish {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.75), transparent);
+}
+
+.divider-diamond,
+.divider-star {
+  font-size: 0.75rem;
+  color: var(--gold-light);
+  opacity: 0.85;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  line-height: 1;
+}
+
+/* ─── Horological Sculpted Pods Grid ────────────────────────────────────── */
+.countdown-pods-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.5rem, 2vw, 1.1rem);
+  width: 100%;
+  margin: 0.4rem 0;
+}
+
+.countdown-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.pod-capsule {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.12;
+  min-height: clamp(64px, 12vw, 92px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(38, 27, 18, 0.95) 0%, rgba(20, 14, 9, 0.98) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-top: 1px solid rgba(255, 245, 215, 0.75);
+  border-bottom: 1px solid rgba(138, 108, 36, 0.5);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 2px 4px rgba(255, 245, 215, 0.15),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.85),
+    0 8px 20px rgba(0, 0, 0, 0.6),
+    0 0 15px rgba(212, 175, 55, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.countdown-pod:hover .pod-capsule {
+  transform: translateY(-2px);
+  border-color: rgba(240, 213, 136, 0.75);
+  box-shadow:
+    inset 0 2px 6px rgba(255, 245, 215, 0.25),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.9),
+    0 12px 28px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(212, 175, 55, 0.25);
+}
+
+/* Glass Specular Top Glare */
+.pod-specular-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0) 100%);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  pointer-events: none;
+}
+
+/* Horizontal Chronograph Split Crease */
+.pod-split-crease {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* High-Contrast Luxury Gold Numerals */
+.pod-num {
+  font-size: clamp(1.6rem, 5.2vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FBF0D2 30%, #E5C368 75%, #B38827 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 12px rgba(201, 168, 76, 0.45));
+  z-index: 3;
+  font-variant-numeric: tabular-nums;
+  display: block;
+  text-align: center;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Unit Label */
+.pod-label {
+  font-size: clamp(0.6rem, 1.8vw, 0.78rem);
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  opacity: 0.85;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+}
+
+/* ─── Seconds Orbital Ring ──────────────────────────────────────────────── */
+.seconds-orbital-ring {
+  position: absolute;
+  inset: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.7;
+}
+
+.ring-track {
+  fill: none;
+  stroke: rgba(212, 175, 55, 0.1);
+  stroke-width: 1.5;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: url(#goldGrad);
+  stroke-width: 2;
+  stroke-dasharray: 163.36;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.8s linear;
+  filter: drop-shadow(0 0 4px var(--gold));
+}
+
+/* ─── Footer & Calligraphic Tagline ─────────────────────────────────────── */
+.countdown-card-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  text-align: center;
+}
+
+.countdown-script-tagline {
+  font-size: clamp(1.15rem, 3.4vw, 1.5rem);
+  color: var(--parchment);
+  text-shadow: 0 0 20px rgba(244, 232, 193, 0.4);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.countdown-location-hint {
+  font-size: clamp(0.72rem, 2vw, 0.86rem);
+  color: var(--gold-light);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-top: -0.1rem;
+}
+
+/* ─── Responsive & Mobile Optimizations ─────────────────────────────────── */
+@media (max-width: 480px) {
+  .countdown-master-card {
+    padding: 1.8rem 1rem 1.6rem;
+    gap: 1rem;
+  }
+
+  .countdown-pods-grid {
+    gap: 0.45rem;
+  }
+
+  .pod-capsule {
+    min-height: 58px;
+    border-radius: 5px;
+  }
+
+  .pod-num {
+    font-size: clamp(1.4rem, 6.2vw, 1.85rem);
+  }
+
+  .pod-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+
+  .countdown-date-badge {
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+  }
+
+  .countdown-script-tagline {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .countdown-pods-grid {
+    gap: 0.3rem;
+  }
+
+  .pod-capsule {
+    min-height: 52px;
+  }
+
+  .pod-num {
+    font-size: 1.3rem;
+  }
+}

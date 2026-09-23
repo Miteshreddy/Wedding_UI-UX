@@ -1,0 +1,127 @@
+/* ═══════════════════════════════════════════════════
+   FinalReveal.css — Mobile Optimized
+═══════════════════════════════════════════════════ */
+
+.final-section {
+  min-height: min(70dvh, 550px);
+  width: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 3.5vh, 2.8rem) max(1rem, var(--sar)) clamp(3rem, 7vh, 5rem) max(1rem, var(--sal));
+  user-select: none;
+}
+
+.final-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.final-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(0.5rem, 1.8vh, 1.1rem);
+  max-width: min(92vw, 680px);
+  width: 100%;
+}
+
+.final-deco-top {
+  margin-bottom: 0.2rem;
+}
+
+.final-deco-svg {
+  width: clamp(160px, 45vw, 240px);
+  height: auto;
+  display: block;
+}
+
+.final-date {
+  font-size: clamp(0.95rem, 3.2vw, 1.45rem);
+  color: var(--gold);
+  letter-spacing: 0.35em;
+  text-shadow: 0 0 15px rgba(201, 168, 76, 0.4);
+  will-change: transform, opacity;
+}
+
+.final-names {
+  font-size: clamp(1.6rem, 6.8vw, 3.8rem);
+  color: var(--parchment);
+  letter-spacing: 0.14em;
+  line-height: 1.12;
+  text-shadow:
+    0 0 35px rgba(201, 168, 76, 0.45),
+    0 0 70px rgba(201, 168, 76, 0.2),
+    0 2px 10px rgba(0, 0, 0, 0.9);
+  will-change: transform, opacity, letter-spacing;
+}
+
+.final-save {
+  font-size: clamp(1.05rem, 3.8vw, 1.85rem);
+  color: var(--gold-light);
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.35);
+  margin-top: 0.2rem;
+  will-change: transform, opacity;
+}
+
+.final-tagline {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  color: var(--gold-light);
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+  will-change: transform, opacity;
+}
+
+.final-deco-bottom {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: clamp(0.4rem, 1.5vh, 0.8rem) 0;
+  will-change: transform, opacity;
+}
+
+.final-seal-text {
+  color: var(--gold);
+  font-size: 0.95rem;
+}
+
+.final-venue {
+  font-size: clamp(0.74rem, 2.2vw, 0.92rem);
+  color: var(--parchment-dark);
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+  will-change: transform, opacity;
+}
+
+.final-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(4, 3, 8, 0.8) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Whisper text — small handwritten line before the main reveal */
+.final-whisper {
+  font-family: var(--font-handwritten);
+  font-size: clamp(0.9rem, 2.8vw, 1.1rem);
+  color: var(--parchment-mid);
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin-bottom: -0.4rem;
+  display: block;
+}

@@ -1,0 +1,266 @@
+/* ═══════════════════════════════════════════════════
+   GiftRegistry.css — Gift Registry & Wishlist
+═══════════════════════════════════════════════════ */
+
+.registry-section {
+  min-height: auto;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(3rem, 8vh, 6rem) max(1rem, var(--sar)) clamp(3rem, 8vh, 6rem) max(1rem, var(--sal));
+  position: relative;
+  overflow: hidden;
+}
+
+.registry-ambient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(30, 18, 5, 0.5) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba(20, 10, 35, 0.3) 0%, transparent 50%),
+    rgba(6, 4, 10, 0.65);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.registry-content {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 5vh, 3rem);
+}
+
+/* ─── Header ──────────────────────────────────────── */
+.registry-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.registry-eyebrow {
+  font-size: clamp(0.7rem, 2vw, 0.82rem);
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  opacity: 0.8;
+}
+
+.registry-title {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  color: var(--parchment);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
+}
+
+/* ─── Personal Note ───────────────────────────────── */
+.registry-note {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 540px;
+  text-align: center;
+  padding: clamp(1rem, 3vw, 1.4rem) clamp(1.2rem, 4vw, 2rem);
+  background: rgba(14, 10, 20, 0.75);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.note-spark {
+  color: var(--gold);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.note-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.note-line {
+  font-size: clamp(0.78rem, 2.2vw, 0.9rem);
+  color: var(--parchment-dark);
+  line-height: 1.5;
+}
+
+.note-line:first-child {
+  color: var(--parchment);
+  opacity: 0.95;
+  font-style: normal;
+  font-family: var(--font-serif);
+}
+
+/* ─── Registry Cards Grid ─────────────────────────── */
+.registry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.8rem, 2.5vw, 1.2rem);
+  width: 100%;
+}
+
+/* ─── Individual Card ─────────────────────────────── */
+.registry-card {
+  position: relative;
+  background: rgba(12, 8, 18, 0.9);
+  border: 1px solid rgba(201, 168, 76, 0.22);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.35s ease;
+  will-change: transform;
+  cursor: default;
+}
+
+.registry-card--hovered {
+  border-color: rgba(201, 168, 76, 0.5);
+}
+
+.registry-card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.registry-card--hovered .registry-card-glow {
+  opacity: 1;
+}
+
+/* Corner ornaments */
+.rc-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(201, 168, 76, 0.4);
+  border-style: solid;
+  border-width: 0;
+  z-index: 2;
+  pointer-events: none;
+  transition: border-color 0.35s ease;
+}
+
+.rc-corner--tl { top: 5px; left: 5px; border-top-width: 1px; border-left-width: 1px; }
+.rc-corner--br { bottom: 5px; right: 5px; border-bottom-width: 1px; border-right-width: 1px; }
+
+.registry-card--hovered .rc-corner {
+  border-color: rgba(201, 168, 76, 0.7);
+}
+
+.registry-card-inner {
+  padding: clamp(1.2rem, 3.5vw, 1.8rem) clamp(1rem, 3vw, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.registry-icon-wrap {
+  width: clamp(52px, 10vw, 68px);
+  height: clamp(52px, 10vw, 68px);
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+  box-shadow: 0 0 14px rgba(201, 168, 76, 0.1);
+}
+
+.registry-icon {
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  line-height: 1;
+}
+
+.registry-category {
+  font-size: clamp(0.6rem, 1.6vw, 0.7rem);
+  color: var(--gold);
+  letter-spacing: 0.18em;
+  opacity: 0.85;
+}
+
+.registry-item-title {
+  font-size: clamp(0.9rem, 2.6vw, 1.1rem);
+  color: var(--parchment);
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+}
+
+.registry-item-desc {
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
+  color: var(--parchment-dark);
+  opacity: 0.78;
+  line-height: 1.5;
+}
+
+/* CTA Button */
+.registry-cta-btn {
+  margin-top: 0.6rem;
+  padding: 0.5rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  border-radius: 3px;
+  color: var(--gold-light);
+  font-size: clamp(0.65rem, 1.8vw, 0.75rem);
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+  font-family: var(--font-display);
+}
+
+.registry-cta-btn:hover,
+.registry-cta-btn:focus-visible {
+  background: rgba(201, 168, 76, 0.12);
+  border-color: rgba(201, 168, 76, 0.7);
+  color: var(--gold-pale);
+  box-shadow: 0 0 14px rgba(201, 168, 76, 0.2);
+  outline: none;
+}
+
+/* ─── Footer Note ─────────────────────────────────── */
+.registry-footer-note {
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+  color: var(--parchment-dark);
+  opacity: 0.6;
+  text-align: center;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Mobile: Stack cards ─────────────────────────── */
+@media (max-width: 640px) {
+  .registry-grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+  }
+
+  .registry-note {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 860px) and (min-width: 641px) {
+  .registry-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

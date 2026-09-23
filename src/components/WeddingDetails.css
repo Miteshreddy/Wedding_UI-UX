@@ -1,0 +1,271 @@
+/* ═══════════════════════════════════════════════════
+   WeddingDetails.css — Wedding Programme Timeline
+═══════════════════════════════════════════════════ */
+
+.details-section {
+  min-height: auto;
+  width: 100%;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(3rem, 8vh, 6rem) max(1rem, var(--sar)) clamp(3rem, 8vh, 6rem) max(1rem, var(--sal));
+  position: relative;
+  overflow: hidden;
+}
+
+.details-ambient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(45, 28, 8, 0.4) 0%, rgba(6, 4, 10, 0.75) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.details-content {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(2rem, 5vh, 3.5rem);
+}
+
+/* ─── Header ──────────────────────────────────────── */
+.details-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.details-eyebrow {
+  font-size: clamp(0.72rem, 2.2vw, 0.85rem);
+  color: var(--gold-light);
+  letter-spacing: 0.2em;
+  opacity: 0.85;
+}
+
+.details-title {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+  color: var(--parchment);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 40px rgba(201, 168, 76, 0.2);
+}
+
+.details-subtitle {
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  color: var(--parchment-dark);
+  opacity: 0.8;
+  margin-top: 0.3rem;
+}
+
+/* ─── Timeline ────────────────────────────────────── */
+.details-timeline {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+/* Vertical spine line */
+.timeline-spine {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(201, 168, 76, 0.4) 10%,
+    rgba(201, 168, 76, 0.4) 90%,
+    transparent 100%);
+  transform-origin: top center;
+}
+
+/* ─── Timeline Item ───────────────────────────────── */
+.timeline-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+.timeline-item--left {
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-right: calc(50% + 1.5rem);
+}
+
+.timeline-item--right {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  padding-left: calc(50% + 1.5rem);
+}
+
+/* Node */
+.timeline-node {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  z-index: 5;
+}
+
+.node-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  background: radial-gradient(circle, rgba(30, 20, 10, 0.95) 60%, transparent 100%);
+  box-shadow:
+    0 0 14px rgba(201, 168, 76, 0.3),
+    inset 0 0 8px rgba(0, 0, 0, 0.8);
+}
+
+.node-icon {
+  position: relative;
+  z-index: 2;
+  font-size: 1rem;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+/* Timeline Card */
+.timeline-card {
+  position: relative;
+  background: rgba(14, 10, 20, 0.88);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 6px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  max-width: clamp(180px, 38vw, 280px);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.7),
+    0 0 15px rgba(201, 168, 76, 0.08);
+}
+
+.timeline-card-inner {
+  padding: clamp(0.9rem, 2.5vw, 1.2rem) clamp(1rem, 2.8vw, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.timeline-time {
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+}
+
+.timeline-label {
+  font-size: clamp(0.95rem, 3vw, 1.15rem);
+  color: var(--parchment);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.timeline-desc {
+  font-size: clamp(0.76rem, 2.2vw, 0.86rem);
+  color: var(--parchment-dark);
+  opacity: 0.8;
+  line-height: 1.4;
+  margin-top: 0.1rem;
+}
+
+/* Corner ornaments on card */
+.tc-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: rgba(201, 168, 76, 0.4);
+  border-style: solid;
+  border-width: 0;
+}
+
+.tc-corner--tl {
+  top: 4px;
+  left: 4px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.tc-corner--br {
+  bottom: 4px;
+  right: 4px;
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+/* ─── Venue Strip ─────────────────────────────────── */
+.details-venue-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.venue-strip-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.venue-strip-name {
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
+  color: var(--gold-light);
+  letter-spacing: 0.12em;
+}
+
+.venue-strip-sep {
+  color: var(--gold);
+  font-style: normal;
+  opacity: 0.6;
+}
+
+.venue-strip-city {
+  font-size: clamp(0.78rem, 2.2vw, 0.92rem);
+  color: var(--parchment-dark);
+  opacity: 0.85;
+}
+
+/* ─── Mobile: stack timeline single-column ────────── */
+@media (max-width: 600px) {
+  .timeline-spine {
+    left: 20px;
+  }
+
+  .timeline-item--left,
+  .timeline-item--right {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 52px;
+    padding-right: 0;
+  }
+
+  .timeline-node {
+    left: 20px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .timeline-card {
+    max-width: 100%;
+    width: 100%;
+  }
+}

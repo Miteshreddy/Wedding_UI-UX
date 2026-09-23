@@ -1,0 +1,345 @@
+/* ═══════════════════════════════════════════════════
+   RSVP.css — Mobile Optimized
+═══════════════════════════════════════════════════ */
+
+.rsvp-section {
+  min-height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(0.5rem, 1.5vh, 1rem) max(1rem, var(--sar)) clamp(1.2rem, 3vh, 2rem) max(1rem, var(--sal));
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+}
+
+/* Semi-transparent candlelight overlay */
+.rsvp-ambient-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(30, 20, 12, 0.45) 0%, rgba(8, 6, 4, 0.65) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.rsvp-burst-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 25;
+}
+
+/* ─── Main Interactive Parchment Card ────────────── */
+.rsvp-parchment {
+  position: relative;
+  z-index: 10;
+  width: min(92vw, 450px);
+  max-height: calc(100dvh - 2rem);
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(244, 232, 193, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(212, 184, 150, 0.08) 0%, transparent 60%),
+    rgba(16, 12, 22, 0.92);
+  border: 1px solid rgba(201, 168, 76, 0.42);
+  border-radius: 6px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(201, 168, 76, 0.18),
+    inset 0 1px 0 rgba(255, 240, 200, 0.15);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: clamp(1.8rem, 4vh, 2.8rem) clamp(1.2rem, 3.5vw, 2.2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  will-change: transform, box-shadow;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Ornate Corner Filigrees ────────────────────── */
+.parchment-corner {
+  position: absolute;
+  width: clamp(16px, 4vw, 22px);
+  height: clamp(16px, 4vw, 22px);
+  border-color: rgba(201, 168, 76, 0.6);
+  border-style: solid;
+  pointer-events: none;
+}
+.parchment-corner--tl { top: 8px; left: 8px; border-width: 1.5px 0 0 1.5px; }
+.parchment-corner--tr { top: 8px; right: 8px; border-width: 1.5px 1.5px 0 0; }
+.parchment-corner--bl { bottom: 8px; left: 8px; border-width: 0 0 1.5px 1.5px; }
+.parchment-corner--br { bottom: 8px; right: 8px; border-width: 0 1.5px 1.5px 0; }
+
+/* ─── Header ─────────────────────────────────────── */
+.rsvp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.rsvp-spark {
+  color: var(--gold);
+  font-size: 0.85rem;
+}
+
+.rsvp-main-title {
+  font-size: clamp(1.25rem, 4.2vw, 1.95rem);
+  color: var(--gold-light);
+  letter-spacing: 0.12em;
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.4);
+}
+
+.rsvp-gold-rule {
+  margin: 0.3rem 0;
+  width: 100%;
+}
+
+.rsvp-invitation-line {
+  font-size: clamp(0.85rem, 2.6vw, 1.05rem);
+  color: var(--parchment);
+  line-height: 1.5;
+  margin-bottom: clamp(1rem, 2.5vh, 1.6rem);
+  opacity: 0.95;
+}
+
+/* ─── Phase 1: Ritual Choices ────────────────────── */
+.rsvp-ritual-choices {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.65rem, 1.8vh, 1rem);
+  width: 100%;
+}
+
+.rsvp-ritual-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(201, 168, 76, 0.3);
+  border-radius: 0;
+  padding: 0.9rem 0.5rem;
+  min-height: 52px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+  outline: none;
+  touch-action: manipulation;
+  width: 100%;
+}
+
+.rsvp-ritual-btn:hover,
+.rsvp-ritual-btn:focus-visible {
+  border-bottom-color: var(--gold-light);
+  border-bottom-width: 2px;
+  transform: translateX(4px);
+}
+
+.ritual-btn-icon {
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.ritual-btn-label {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--parchment);
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* ─── Phase 2: Handwritten Name Form ─────────────── */
+.rsvp-name-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.7rem, 2vh, 1.2rem);
+  width: 100%;
+}
+
+.decision-callout {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: clamp(0.78rem, 2.2vw, 0.85rem);
+  color: var(--gold-light);
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+}
+
+.name-prompt-label {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
+  color: var(--parchment-mid);
+}
+
+.name-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.name-ink-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid rgba(201, 168, 76, 0.45);
+  padding: 0.6rem 0.5rem;
+  font-size: 18px;
+  font-family: var(--font-handwritten);
+  color: var(--parchment);
+  text-align: center;
+  outline: none;
+  letter-spacing: 0.02em;
+  transition: border-color 0.3s ease;
+}
+
+.name-ink-input:focus {
+  border-bottom-color: var(--gold-light);
+}
+
+.name-ink-input::placeholder {
+  color: rgba(212, 184, 150, 0.4);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.rsvp-seal-submit-btn {
+  background: linear-gradient(135deg, #a82222 0%, #7a1212 60%, #4a0808 100%);
+  border: 1px solid rgba(243, 221, 144, 0.4);
+  border-radius: 4px;
+  color: #fff2cc;
+  padding: 0.8rem 1.6rem;
+  min-height: 48px;
+  font-size: clamp(0.76rem, 2.2vw, 0.88rem);
+  letter-spacing: 0.18em;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(80, 10, 10, 0.7);
+  transition: all 0.35s ease;
+  outline: none;
+  margin-top: 0.3rem;
+  width: 100%;
+  touch-action: manipulation;
+}
+
+.rsvp-seal-submit-btn:hover,
+.rsvp-seal-submit-btn:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(120, 20, 20, 0.9), 0 0 15px rgba(243, 221, 144, 0.3);
+}
+
+/* ─── Phase 3 & 4: Wax Seal & Confirmation ───────── */
+.rsvp-sealed-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.8rem, 2vh, 1.4rem);
+  width: 100%;
+}
+
+.rsvp-wax-stamp {
+  width: clamp(72px, 18vw, 84px);
+  height: clamp(72px, 18vw, 84px);
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(201, 168, 76, 0.35);
+  will-change: transform, opacity;
+}
+
+.stamp-inner-disc {
+  width: 84%;
+  height: 84%;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 240, 200, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+}
+
+.stamp-seal-status {
+  font-size: clamp(0.5rem, 1.4vw, 0.6rem);
+  color: #fff9e6;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.stamp-monogram {
+  font-size: clamp(0.95rem, 2.8vw, 1.15rem);
+  color: #f3dd90;
+  letter-spacing: 0.1em;
+}
+
+.stamp-ornament {
+  font-size: 0.5rem;
+  color: #f3dd90;
+  opacity: 0.7;
+}
+
+.confirmation-narrative {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.confirm-title {
+  font-size: clamp(1.1rem, 3.4vw, 1.55rem);
+  color: var(--gold-light);
+  letter-spacing: 0.12em;
+}
+
+.confirm-sub {
+  font-size: clamp(0.82rem, 2.4vw, 0.95rem);
+  color: var(--parchment);
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+.confirm-guest-name {
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  color: var(--gold-pale);
+  letter-spacing: 0.08em;
+  margin: 0.2rem 0;
+}
+
+.confirm-venue-stamp {
+  font-size: clamp(0.68rem, 1.8vw, 0.76rem);
+  color: var(--parchment-dark);
+  opacity: 0.65;
+  letter-spacing: 0.1em;
+}
+
+/* ─── Footer Details ─────────────────────────────── */
+.rsvp-parchment-footer {
+  margin-top: clamp(0.8rem, 2vh, 1.4rem);
+  border-top: 1px solid rgba(201, 168, 76, 0.18);
+  padding-top: 0.6rem;
+  width: 100%;
+}
+
+.footer-venue {
+  font-size: clamp(0.74rem, 2vw, 0.85rem);
+  color: var(--parchment-dark);
+  letter-spacing: 0.08em;
+}
+
+.footer-date {
+  font-size: clamp(0.7rem, 1.8vw, 0.78rem);
+  color: var(--gold);
+  opacity: 0.8;
+}
