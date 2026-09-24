@@ -90,7 +90,7 @@ export default function MagicalMap() {
         if (el) el.style.opacity = '1';
       });
       footprintsRef.current.forEach((el) => {
-        if (el) el.style.opacity = '0.85';
+        if (el) el.style.opacity = '1';
       });
       if (destinationFrameRef.current) destinationFrameRef.current.style.opacity = '1';
       return;
@@ -124,16 +124,9 @@ export default function MagicalMap() {
         },
       });
 
-      // 1. Draw glowing route steadily as user scrolls
-      tl.to(
-        [pathEl, glowEl].filter(Boolean),
-        {
-          strokeDashoffset: 0,
-          duration: 1,
-          ease: 'none',
-        },
-        0
-      );
+
+      // Paths are invisible (footsteps-only route) — we still read length for timing sync
+      // but skip the strokeDashoffset animation entirely.
 
       // 2. Animate footsteps sequentially along the route with subtle audio
       let lastStepIndex = -1;
@@ -142,12 +135,12 @@ export default function MagicalMap() {
         if (!fp) return;
         tl.fromTo(
           fp,
-          { opacity: 0, scale: 0.3 },
+          { opacity: 0, scale: 0.2 },
           {
-            opacity: 0.85,
+            opacity: 1,
             scale: 1,
             duration: 0.04,
-            ease: 'power2.out',
+            ease: 'back.out(2)',
             onStart: () => {
               if (lastStepIndex !== i && i % 3 === 0) {
                 sound.playFootstep();
@@ -229,6 +222,28 @@ export default function MagicalMap() {
             <stop offset="50%" stopColor="#f3dd90" />
             <stop offset="100%" stopColor="#e8c878" />
           </linearGradient>
+
+          {/* ── Magical golden footprint gradient ── */}
+          <radialGradient id="footGold" cx="45%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="#fff8dc" stopOpacity="1" />
+            <stop offset="30%" stopColor="#f3dd90" stopOpacity="1" />
+            <stop offset="70%" stopColor="#c9a84c" stopOpacity="1" />
+            <stop offset="100%" stopColor="#8a6820" stopOpacity="1" />
+          </radialGradient>
+
+          {/* Soft golden halo blur filter for footprints */}
+          <filter id="footGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2.8" result="blur" />
+            <feColorMatrix in="blur" type="matrix"
+              values="1 0.7 0 0 0.3
+                      0.6 0.5 0 0 0.1
+                      0   0   0 0 0
+                      0   0   0 0.9 0" result="goldBlur" />
+            <feMerge>
+              <feMergeNode in="goldBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
         </defs>
 
         {/* Parchment Base Layer */}
@@ -470,66 +485,103 @@ export default function MagicalMap() {
           <polygon points="-6,-10 0,-16 6,-10" fill="#c9a84c" />
         </g>
 
-        {/* Animated Golden Journey Route */}
+        {/* Journey Route — kept invisible; used only for path length calc.
+             Route is revealed solely through footprint animations (Marauder's Map style) */}
         <path
           ref={pathRef}
           d={MAP_PATH}
           fill="none"
-          stroke="url(#goldPathGrad)"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          stroke="transparent"
+          strokeWidth="0"
         />
-
         <path
           ref={glowPathRef}
           d={MAP_PATH}
           fill="none"
-          stroke="rgba(240, 210, 120, 0.4)"
-          strokeWidth="6.5"
-          strokeLinecap="round"
-          filter="url(#routeGlow)"
+          stroke="transparent"
+          strokeWidth="0"
         />
 
-        {/* Animated Footprints Along Route — Marauder's Map Style */}
-        {FOOTSTEPS.map((step, i) => (
-          <g
-            key={i}
-            ref={(el) => (footprintsRef.current[i] = el)}
-            transform={`translate(${step.x}, ${step.y}) rotate(${step.rot})`}
-            opacity="0"
-          >
-            {step.isLeft ? (
-              <g fill="rgba(80, 50, 10, 0.9)" stroke="rgba(160, 110, 40, 0.5)" strokeWidth="0.3">
-                {/* Heel */}
-                <ellipse cx="-2" cy="4" rx="2.8" ry="3.8" />
-                {/* Ball */}
-                <ellipse cx="-2" cy="-2.5" rx="2.4" ry="2.8" />
-                {/* Toes */}
-                <ellipse cx="-3.8" cy="-5.5" rx="1.1" ry="0.9" />
-                <ellipse cx="-2.2" cy="-6.2" rx="1.1" ry="0.9" />
-                <ellipse cx="-0.5" cy="-6.0" rx="1.0" ry="0.9" />
-                <ellipse cx="1.0" cy="-5.5" rx="0.9" ry="0.8" />
-                {/* Inner arch glow */}
-                <ellipse cx="-1.5" cy="0.8" rx="1.2" ry="2" fill="rgba(201, 168, 76, 0.25)" stroke="none" />
-              </g>
-            ) : (
-              <g fill="rgba(80, 50, 10, 0.9)" stroke="rgba(160, 110, 40, 0.5)" strokeWidth="0.3">
-                {/* Heel */}
-                <ellipse cx="2" cy="4" rx="2.8" ry="3.8" />
-                {/* Ball */}
-                <ellipse cx="2" cy="-2.5" rx="2.4" ry="2.8" />
-                {/* Toes */}
-                <ellipse cx="3.8" cy="-5.5" rx="1.1" ry="0.9" />
-                <ellipse cx="2.2" cy="-6.2" rx="1.1" ry="0.9" />
-                <ellipse cx="0.5" cy="-6.0" rx="1.0" ry="0.9" />
-                <ellipse cx="-1.0" cy="-5.5" rx="0.9" ry="0.8" />
-                {/* Inner arch glow */}
-                <ellipse cx="1.5" cy="0.8" rx="1.2" ry="2" fill="rgba(201, 168, 76, 0.25)" stroke="none" />
-              </g>
-            )}
-          </g>
-        ))}
+        {/* ── Magical Golden Footprints — Marauder's Map Style ── */}
+        {FOOTSTEPS.map((step, i) => {
+          const s = step.isLeft ? -1 : 1; // mirror factor
+          return (
+            <g
+              key={i}
+              ref={(el) => (footprintsRef.current[i] = el)}
+              transform={`translate(${step.x}, ${step.y}) rotate(${step.rot}) scale(1.8)`}
+              opacity="0"
+              filter="url(#footGlow)"
+            >
+              {/* ── Full sole silhouette (realistic shoe outline) ── */}
+              <path
+                d={`
+                  M ${s*1.2} 7
+                  C ${s*3.5} 7 ${s*5} 5.5 ${s*5} 3.5
+                  C ${s*5} 1.5 ${s*4} 0 ${s*3.5} -1
+                  C ${s*3} -2.5 ${s*3.2} -3.5 ${s*3} -5
+                  C ${s*2.5} -7.5 ${s*1.5} -9.5 ${s*0.5} -11
+                  C ${s*(-0.3)} -12.2 ${s*(-1.5)} -12.8 ${s*(-2.5)} -12.5
+                  C ${s*(-4)} -12 ${s*(-5)} -10.5 ${s*(-5)} -8.5
+                  C ${s*(-5)} -6 ${s*(-4.2)} -4 ${s*(-4)} -2
+                  C ${s*(-3.8)} 0 ${s*(-4.2)} 1.5 ${s*(-4.5)} 3
+                  C ${s*(-4.8)} 5 ${s*(-3.5)} 7 ${s*1.2} 7
+                  Z
+                `}
+                fill="url(#footGold)"
+                stroke="rgba(255, 230, 130, 0.6)"
+                strokeWidth="0.4"
+                strokeLinejoin="round"
+              />
+              {/* ── Arch cutout (lighter mid-section = arch of foot) ── */}
+              <path
+                d={`
+                  M ${s*(-3.6)} -1
+                  C ${s*(-2)} -0.5 ${s*(-0.5)} -0.5 ${s*1.5} -0.5
+                  C ${s*2.5} -0.5 ${s*3.2} -0.2 ${s*3.2} 0.5
+                  C ${s*3.2} 1.2 ${s*2.5} 1.5 ${s*1.5} 1.5
+                  C ${s*(-0.5)} 1.5 ${s*(-2.5)} 1.5 ${s*(-3.5)} 1
+                  Z
+                `}
+                fill="rgba(255, 245, 180, 0.18)"
+                stroke="none"
+              />
+              {/* ── Heel detail line ── */}
+              <ellipse
+                cx={s * 0}
+                cy="5"
+                rx="3.5"
+                ry="1.5"
+                fill="rgba(255, 220, 80, 0.15)"
+                stroke="rgba(255, 230, 130, 0.25)"
+                strokeWidth="0.3"
+              />
+              {/* ── Toe box highlight ── */}
+              <ellipse
+                cx={s * (-1.5)}
+                cy="-10.5"
+                rx="2.8"
+                ry="1.5"
+                fill="rgba(255, 248, 200, 0.22)"
+                stroke="none"
+              />
+              {/* ── Magical sparkle dot at toe tip ── */}
+              <circle
+                cx={s * (-1.5)}
+                cy="-12"
+                r="0.9"
+                fill="#fffbe8"
+                opacity="0.9"
+              />
+              <circle
+                cx={s * (-1.5)}
+                cy="-12"
+                r="2.2"
+                fill="rgba(255, 240, 150, 0.35)"
+              />
+            </g>
+          );
+        })}
 
         {/* Milestone Waypoint Nodes (SVG) */}
         {MAP_STOPS.map((stop, i) => (
