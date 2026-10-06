@@ -61,44 +61,85 @@
   margin: 0;
 }
 
-/* ─── Liquid Gallery Stage ───────────────────────── */
+/* ─── The Pensieve Basin ─────────────────────────── */
+.gallery-subtitle {
+  font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+  color: var(--parchment-dark);
+  opacity: 0.8;
+}
+
+.pensieve-basin {
+  --pool: min(78vw, 400px);
+  position: relative;
+  width: calc(var(--pool) + 48px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  z-index: 15;
+  /* carved stone rim */
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 calc(var(--pool) / 2), #2a2530 calc(var(--pool) / 2 + 1px), #4a4452 calc(var(--pool) / 2 + 10px), #1b1820 calc(var(--pool) / 2 + 24px));
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.8),
+    0 0 90px rgba(150, 200, 255, 0.18),
+    inset 0 0 0 1px rgba(201, 168, 76, 0.3);
+}
+
+.pensieve-runes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: pensieve-spin 90s linear infinite;
+}
+.pensieve-runes svg { width: 100%; height: 100%; overflow: visible; }
+.pensieve-runes text {
+  font-family: var(--font-display);
+  font-size: 6.4px;
+  letter-spacing: 1.6px;
+  fill: rgba(220, 196, 130, 0.65);
+}
+
 .liquid-gallery-stage {
   position: relative;
-  width: 100%;
-  max-width: 480px;
-  height: clamp(310px, 46vh, 390px);
-  perspective: 1200px;
-  transform-style: preserve-3d;
+  width: var(--pool);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 15;
   outline: none;
   touch-action: pan-y;
+  background: radial-gradient(circle at 50% 45%, #cfe4ff 0%, #6f8fb8 35%, #1d2a44 70%, #0a0e1a 100%);
+  box-shadow:
+    inset 0 0 40px 10px rgba(5, 8, 20, 0.85),
+    inset 0 0 120px rgba(180, 215, 255, 0.35),
+    0 0 40px rgba(170, 210, 255, 0.35);
 }
+.liquid-gallery-stage:focus-visible { box-shadow: 0 0 0 2px var(--gold-light), inset 0 0 40px 10px rgba(5, 8, 20, 0.85); }
 
 .liquid-card {
   position: absolute;
-  width: 100%;
+  inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
   will-change: transform, opacity, filter;
   transform-origin: center center;
 }
 
+/* Memory sits inside the pool, its edges dissolving into the silver water */
 .liquid-photo-frame {
   position: relative;
   width: 100%;
-  height: clamp(180px, 28vh, 230px);
-  background: #110d16;
-  border-radius: 3px;
-  border: 4px solid rgba(244, 232, 193, 0.55);
-  box-shadow:
-    0 12px 35px rgba(0, 0, 0, 0.75),
-    0 2px 8px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(201, 168, 76, 0.1);
+  height: 100%;
   overflow: hidden;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 42%, transparent 70%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 42%, transparent 70%);
+  opacity: 0.92;
+  mix-blend-mode: screen;
 }
 
 .liquid-photo-inner {
@@ -107,13 +148,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: saturate(0.6) brightness(1.15) sepia(0.15) hue-rotate(170deg) saturate(0.8);
 }
 
+.liquid-photo-img,
 .liquid-svg {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   display: block;
 }
+
+.pensieve-mist {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  z-index: 5;
+  background: conic-gradient(from 0deg, transparent 0 10%, rgba(220, 235, 255, 0.28) 18%, transparent 30%, rgba(200, 225, 255, 0.2) 52%, transparent 64%, rgba(230, 240, 255, 0.25) 80%, transparent 92%);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+  animation: pensieve-spin 18s linear infinite;
+}
+.pensieve-mist--2 {
+  animation-duration: 27s;
+  animation-direction: reverse;
+  opacity: 0.7;
+}
+
+@keyframes pensieve-spin { to { transform: rotate(360deg); } }
 
 /* Film Grain Overlay */
 .liquid-grain-overlay {
@@ -136,6 +198,9 @@
 /* ─── Metadata Card ──────────────────────────────── */
 .liquid-card-meta {
   width: 100%;
+  max-width: 440px;
+  z-index: 10;
+  animation: meta-in 0.6s var(--ease-reveal);
   margin-top: clamp(0.5rem, 1.5vh, 0.9rem);
   background: rgba(18, 14, 22, 0.8);
   border: 1px solid rgba(201, 168, 76, 0.25);
@@ -262,3 +327,6 @@
     gap: 0.15rem;
   }
 }
+
+@keyframes meta-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.liquid-grain-overlay, .liquid-sheen-light { border-radius: 50%; }

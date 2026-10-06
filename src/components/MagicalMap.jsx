@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -47,45 +47,43 @@ const MAP_STOPS = [
   },
 ];
 
-// Progressive footprint step coordinates along the route
-const FOOTSTEPS = [
-  { x: 75, y: 505, rot: -45, isLeft: true, t: 0.04 },
-  { x: 105, y: 470, rot: -40, isLeft: false, t: 0.07 },
-  { x: 135, y: 435, rot: -30, isLeft: true, t: 0.09 },
-  { x: 160, y: 390, rot: -20, isLeft: false, t: 0.12 }, // Stop 1
-  { x: 165, y: 345, rot: 15, isLeft: true, t: 0.18 },
-  { x: 150, y: 295, rot: 40, isLeft: false, t: 0.23 },
-  { x: 180, y: 220, rot: 25, isLeft: true, t: 0.29 },
-  { x: 235, y: 165, rot: 30, isLeft: false, t: 0.33 },
-  { x: 285, y: 135, rot: 35, isLeft: true, t: 0.36 },
-  { x: 330, y: 110, rot: 50, isLeft: false, t: 0.38 }, // Stop 2
-  { x: 385, y: 100, rot: 90, isLeft: true, t: 0.44 },
-  { x: 420, y: 140, rot: 120, isLeft: false, t: 0.49 },
-  { x: 415, y: 195, rot: 150, isLeft: true, t: 0.53 },
-  { x: 380, y: 255, rot: 140, isLeft: false, t: 0.58 },
-  { x: 345, y: 300, rot: 120, isLeft: true, t: 0.62 },
-  { x: 360, y: 340, rot: 110, isLeft: false, t: 0.65 }, // Stop 3
-  { x: 385, y: 390, rot: 95, isLeft: true, t: 0.72 },
-  { x: 415, y: 435, rot: 110, isLeft: false, t: 0.77 },
-  { x: 400, y: 475, rot: 140, isLeft: true, t: 0.82 },
-  { x: 355, y: 515, rot: 160, isLeft: false, t: 0.86 },
-  { x: 300, y: 540, rot: 175, isLeft: true, t: 0.89 },
-  { x: 240, y: 560, rot: 185, isLeft: false, t: 0.92 }, // Destination
-];
+// Marauder's Map–style footsteps, sampled along the route so each print
+// faces the direction of travel and alternates left/right of the path.
+const STEP_SPACING = 15;
+function buildFootsteps() {
+  if (typeof document === 'undefined') return [];
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', MAP_PATH);
+  const total = path.getTotalLength();
+  const steps = [];
+  for (let d = 6, i = 0; d < total - 2; d += STEP_SPACING, i++) {
+    const p = path.getPointAtLength(d);
+    const q = path.getPointAtLength(Math.min(total, d + 1));
+    const ang = Math.atan2(q.y - p.y, q.x - p.x);
+    const isLeft = i % 2 === 0;
+    const off = isLeft ? -3.2 : 3.2;
+    steps.push({
+      x: p.x + Math.cos(ang + Math.PI / 2) * off,
+      y: p.y + Math.sin(ang + Math.PI / 2) * off,
+      // prints are drawn pointing "up" (-y); rotate to face travel direction
+      rot: (ang * 180) / Math.PI + 90,
+      isLeft,
+      t: (d / total) * 0.92,
+    });
+  }
+  return steps;
+}
 
 export default function MagicalMap() {
   const sectionRef = useRef(null);
-  const pathRef = useRef(null);
-  const glowPathRef = useRef(null);
   const stopsRef = useRef([]);
   const footprintsRef = useRef([]);
   const destinationFrameRef = useRef(null);
   const prefersReduced = useReducedMotion();
+  const [FOOTSTEPS] = useState(buildFootsteps);
 
   useEffect(() => {
     if (prefersReduced) {
-      if (pathRef.current) pathRef.current.style.strokeDashoffset = '0';
-      if (glowPathRef.current) glowPathRef.current.style.strokeDashoffset = '0';
       stopsRef.current.forEach((el) => {
         if (el) el.style.opacity = '1';
       });
@@ -97,19 +95,6 @@ export default function MagicalMap() {
     }
 
     const ctx = gsap.context(() => {
-      const pathEl = pathRef.current;
-      const glowEl = glowPathRef.current;
-      if (!pathEl) return;
-
-      const len = pathEl.getTotalLength?.() || 1400;
-      pathEl.style.strokeDasharray = len;
-      pathEl.style.strokeDashoffset = len;
-
-      if (glowEl) {
-        glowEl.style.strokeDasharray = len;
-        glowEl.style.strokeDashoffset = len;
-      }
-
       const isMobile = window.innerWidth < 768;
       const scrollLength = isMobile ? '+=320%' : '+=450%';
 
@@ -124,32 +109,22 @@ export default function MagicalMap() {
         },
       });
 
-      // 1. Draw glowing route steadily as user scrolls
-      tl.to(
-        [pathEl, glowEl].filter(Boolean),
-        {
-          strokeDashoffset: 0,
-          duration: 1,
-          ease: 'none',
-        },
-        0
-      );
-
       // 2. Animate footsteps sequentially along the route with subtle audio
       let lastStepIndex = -1;
       FOOTSTEPS.forEach((step, i) => {
         const fp = footprintsRef.current[i];
         if (!fp) return;
+        // Each print inks in, then settles to a faded trail behind the walker
         tl.fromTo(
           fp,
-          { opacity: 0, scale: 0.3 },
+          { opacity: 0, scale: 0.4 },
           {
-            opacity: 0.85,
+            opacity: 1,
             scale: 1,
-            duration: 0.04,
+            duration: 0.02,
             ease: 'power2.out',
             onStart: () => {
-              if (lastStepIndex !== i && i % 3 === 0) {
+              if (lastStepIndex !== i && i % 4 === 0) {
                 sound.playFootstep();
                 lastStepIndex = i;
               }
@@ -157,6 +132,7 @@ export default function MagicalMap() {
           },
           step.t
         );
+        tl.to(fp, { opacity: 0.45, duration: 0.06, ease: 'none' }, step.t + 0.04);
       });
 
       // 3. Reveal milestone markers with handwritten annotations
@@ -190,7 +166,7 @@ export default function MagicalMap() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [prefersReduced]);
+  }, [prefersReduced, FOOTSTEPS]);
 
   return (
     <section
@@ -211,9 +187,9 @@ export default function MagicalMap() {
       >
         <defs>
           <radialGradient id="mapGlow" cx="50%" cy="50%" r="65%">
-            <stop offset="0%" stopColor="#f7ecd0" stopOpacity="0.16" />
-            <stop offset="60%" stopColor="#e2cca0" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#08060a" stopOpacity="0.85" />
+            <stop offset="0%" stopColor="#f3e4bd" />
+            <stop offset="65%" stopColor="#e2c991" />
+            <stop offset="100%" stopColor="#b08c55" />
           </radialGradient>
 
           <filter id="routeGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -292,7 +268,18 @@ export default function MagicalMap() {
             fontFamily="'Dancing Script', cursive"
             fill="rgba(80, 55, 20, 0.9)"
           >
-            Their Story
+            I solemnly swear we are up to no good
+          </text>
+          <text
+            x="0"
+            y="18"
+            textAnchor="middle"
+            fontSize="7.5"
+            fontFamily="'IM Fell English', serif"
+            fontStyle="italic"
+            fill="rgba(80, 55, 20, 0.7)"
+          >
+            Messrs. Evelyn &amp; Adrian present: The Map of Their Story
           </text>
         </g>
 
@@ -470,27 +457,6 @@ export default function MagicalMap() {
           <polygon points="-6,-10 0,-16 6,-10" fill="#c9a84c" />
         </g>
 
-        {/* Animated Golden Journey Route */}
-        <path
-          ref={pathRef}
-          d={MAP_PATH}
-          fill="none"
-          stroke="url(#goldPathGrad)"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        <path
-          ref={glowPathRef}
-          d={MAP_PATH}
-          fill="none"
-          stroke="rgba(240, 210, 120, 0.4)"
-          strokeWidth="6.5"
-          strokeLinecap="round"
-          filter="url(#routeGlow)"
-        />
-
         {/* Animated Footprints Along Route */}
         {FOOTSTEPS.map((step, i) => (
           <g
@@ -498,18 +464,13 @@ export default function MagicalMap() {
             ref={(el) => (footprintsRef.current[i] = el)}
             transform={`translate(${step.x}, ${step.y}) rotate(${step.rot})`}
             opacity="0"
+            className="map-footprint"
           >
-            {step.isLeft ? (
-              <g fill="rgba(235, 205, 110, 0.85)">
-                <ellipse cx="-2" cy="-3" rx="2" ry="3.5" />
-                <ellipse cx="-2" cy="3" rx="1.5" ry="2" />
-              </g>
-            ) : (
-              <g fill="rgba(235, 205, 110, 0.85)">
-                <ellipse cx="2" cy="-3" rx="2" ry="3.5" />
-                <ellipse cx="2" cy="3" rx="1.5" ry="2" />
-              </g>
-            )}
+            <g fill="#3a230c" transform={step.isLeft ? 'scale(-1,1)' : undefined}>
+              {/* sole + heel of a small boot print */}
+              <path d="M0.3 -6.2 C2.4 -6.2 2.9 -3.6 2.5 -1.6 C2.2 -0.2 1.4 0.4 0.2 0.4 C-1.2 0.4 -2 -0.6 -2 -2.2 C-2 -4.4 -1.4 -6.2 0.3 -6.2 Z" />
+              <ellipse cx="0.1" cy="3.4" rx="1.7" ry="2" />
+            </g>
           </g>
         ))}
 

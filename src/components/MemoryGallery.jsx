@@ -2,12 +2,14 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
+import CouplePhoto from './CouplePhoto';
 import './MemoryGallery.css';
 
 // 6 Richly crafted memories as detailed SVG/CSS art scenes
 const MEMORIES = [
   {
     id: 0,
+    photo: '/photos/memory-1.jpg',
     title: 'A Candlelit Evening',
     date: '14 February 2021',
     place: 'St. Andrews',
@@ -141,6 +143,7 @@ const MEMORIES = [
   },
   {
     id: 1,
+    photo: '/photos/memory-2.jpg',
     title: 'The Highland Trail',
     date: '27 August 2022',
     place: 'Isle of Skye',
@@ -211,6 +214,7 @@ const MEMORIES = [
   },
   {
     id: 2,
+    photo: '/photos/memory-3.jpg',
     title: 'The Secret Garden',
     date: '15 June 2023',
     place: 'Royal Botanic Garden',
@@ -285,6 +289,7 @@ const MEMORIES = [
   },
   {
     id: 3,
+    photo: '/photos/memory-4.jpg',
     title: 'The Question',
     date: '06 May 2024',
     place: 'Arthur’s Seat',
@@ -378,6 +383,7 @@ const MEMORIES = [
   },
   {
     id: 4,
+    photo: '/photos/memory-5.jpg',
     title: 'Edinburgh at Dusk',
     date: '18 October 2025',
     place: 'The Old Town',
@@ -450,6 +456,7 @@ const MEMORIES = [
   },
   {
     id: 5,
+    photo: '/photos/memory-6.jpg',
     title: 'The Grand Hall',
     date: '31 October 2026',
     place: 'The Grand Hall',
@@ -716,11 +723,25 @@ export default function MemoryGallery() {
       {/* Simple Editorial Section Header */}
       <header className="gallery-editorial-header" role="banner">
         <p className="gallery-edition t-ink">2021 – 2026</p>
-        <h2 className="gallery-title t-display">Six Memories</h2>
+        <h2 className="gallery-title t-display">The Pensieve</h2>
+        <p className="gallery-subtitle t-ink">Six memories, siphoned into the silver pool</p>
         <span className="gold-rule" />
       </header>
 
-      {/* Liquid Memory Gallery Stage */}
+      {/* The Pensieve: a stone basin holding a glowing pool of memories */}
+      <div className="pensieve-basin">
+        <div className="pensieve-runes" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <path id="runeCircle" d="M100 100 m-92 0 a92 92 0 1 1 184 0 a92 92 0 1 1 -184 0" />
+            </defs>
+            <text>
+              <textPath href="#runeCircle" startOffset="0">
+                ✦ ᚱᛖᛗᛖᛗᛒᛖᚱ ✦ THE PENSIEVE ✦ ᛗᛖᛗᛟᚱᛁᛖᛋ ✦ 2021 — 2026 ✦ ᛚᛟᚢᛖ ✦ EVELYN &amp; ADRIAN ✦
+              </textPath>
+            </text>
+          </svg>
+        </div>
       <div
         ref={galleryRef}
         className="liquid-gallery-stage"
@@ -773,15 +794,32 @@ export default function MemoryGallery() {
                   : 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease',
               }}
             >
-              {/* Photo Frame with Film Grain & Lighting */}
+              {/* Memory surfacing inside the Pensieve pool */}
               <div className="liquid-photo-frame">
-                <div className="liquid-photo-inner">{mem.scene}</div>
+                <div className="liquid-photo-inner">
+                  <CouplePhoto
+                    src={mem.photo}
+                    alt={`${mem.title}, ${mem.date}`}
+                    className="liquid-photo-img"
+                    fallback={mem.scene}
+                  />
+                </div>
                 <div className="liquid-grain-overlay" aria-hidden="true" />
                 <div className="liquid-sheen-light" aria-hidden="true" />
               </div>
+            </div>
+          );
+        })}
+        {/* Silvery memory mist swirling over the pool surface */}
+        <div className="pensieve-mist" aria-hidden="true" />
+        <div className="pensieve-mist pensieve-mist--2" aria-hidden="true" />
+      </div>
+      </div>
 
-              {/* Photo Metadata Card */}
-              <div className="liquid-card-meta">
+      {/* Memory metadata (below the basin) */}
+      {MEMORIES.filter((_, i) => i === currentIndex).map((mem) => (
+
+              <div key={mem.id} className="liquid-card-meta" aria-live="polite">
                 <div className="liquid-meta-header">
                   <span className="liquid-meta-date t-ink">{mem.date}</span>
                   <span className="liquid-meta-place t-display">
@@ -791,10 +829,7 @@ export default function MemoryGallery() {
                 <h3 className="liquid-meta-title t-display">{mem.title}</h3>
                 <p className="liquid-meta-caption t-ink">{mem.caption}</p>
               </div>
-            </div>
-          );
-        })}
-      </div>
+      ))}
 
       {/* Constellation Progress Indicator */}
       <div
@@ -819,7 +854,7 @@ export default function MemoryGallery() {
 
       {/* Tactile Interaction Hint */}
       <p className="liquid-drag-hint t-handwritten" aria-hidden="true">
-        {('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'swipe to explore' : 'drag to distort'}
+        {('ontouchstart' in window || navigator.maxTouchPoints > 0) ? 'swipe the pool to stir a memory' : 'drag across the pool to stir a memory'}
       </p>
     </section>
   );

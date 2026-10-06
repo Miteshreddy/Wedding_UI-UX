@@ -3,6 +3,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
+import DeathlyHallows from './DeathlyHallows';
+import CouplePhoto from './CouplePhoto';
 import './LoveConstellation.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -506,7 +508,10 @@ export default function LoveConstellation() {
           scrub: 1,
           onUpdate: (self) => {
             const p = self.progress;
-            const isVisible = p >= m.t - 0.08 && p < m.t + 0.16;
+            // Hide each card before the next one appears so cards never stack
+            const next = MILESTONES[i + 1];
+            const hideAt = next ? Math.min(m.t + 0.16, next.t - 0.09) : m.t + 0.16;
+            const isVisible = p >= m.t - 0.08 && p < hideAt;
 
             if (isVisible && lastSoundPlayed !== i && p >= m.t - 0.02) {
               sound.playCelestialChime(528 + i * 80);
@@ -519,6 +524,7 @@ export default function LoveConstellation() {
               scale: isVisible ? 1 : 0.92,
               duration: 0.3,
               ease: 'power2.out',
+              overwrite: 'auto',
             });
           },
         });
@@ -618,117 +624,125 @@ export default function LoveConstellation() {
         aria-label="The couple silhouette"
       >
         <div className="photo-frame-glow">
+          <DeathlyHallows className="constellation-hallows" size="100%" strokeWidth={0.8} />
+          <CouplePhoto
+            src="/photos/couple.jpg"
+            alt="Evelyn and Adrian"
+            className="couple-photo"
+            fallback={
           <svg
-            viewBox="0 0 220 280"
-            className="couple-illustration"
-            aria-hidden="true"
-          >
-            <defs>
-              <radialGradient id="portraitGlow" cx="50%" cy="45%" r="60%">
-                <stop offset="0%" stopColor="rgba(201, 168, 76, 0.35)" />
-                <stop offset="60%" stopColor="rgba(120, 80, 160, 0.15)" />
-                <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
-              </radialGradient>
-              <linearGradient
-                id="silhouetteGrad"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="100%"
+                viewBox="0 0 220 280"
+                className="couple-illustration"
+                aria-hidden="true"
               >
-                <stop offset="0%" stopColor="#281e14" />
-                <stop offset="100%" stopColor="#120c08" />
-              </linearGradient>
-            </defs>
-
-            {/* Background oval medallion */}
-            <ellipse
-              cx="110"
-              cy="140"
-              rx="98"
-              ry="125"
-              fill="#0c0910"
-              stroke="rgba(201, 168, 76, 0.45)"
-              strokeWidth="1.2"
-            />
-            <ellipse
-              cx="110"
-              cy="140"
-              rx="92"
-              ry="118"
-              fill="url(#portraitGlow)"
-            />
-            <ellipse
-              cx="110"
-              cy="140"
-              rx="88"
-              ry="114"
-              fill="none"
-              stroke="rgba(201, 168, 76, 0.22)"
-              strokeWidth="0.8"
-              strokeDasharray="4 3"
-            />
-
-            {/* Silhouette: Evelyn */}
-            <g
-              fill="url(#silhouetteGrad)"
-              stroke="rgba(201, 168, 76, 0.3)"
-              strokeWidth="0.5"
-            >
-              <ellipse cx="80" cy="85" rx="19" ry="24" />
-              <path d="M56 280 Q62 170 80 145 Q90 130 105 136 Q98 148 92 180 L88 280Z" />
-              <path
-                d="M88 170 Q75 195 58 220"
-                stroke="rgba(180, 140, 70, 0.6)"
-                strokeWidth="16"
-                strokeLinecap="round"
-                fill="none"
-              />
-            </g>
-
-            {/* Silhouette: Adrian */}
-            <g
-              fill="url(#silhouetteGrad)"
-              stroke="rgba(201, 168, 76, 0.3)"
-              strokeWidth="0.5"
-            >
-              <ellipse cx="140" cy="84" rx="18" ry="23" />
-              <path d="M118 280 Q122 190 132 160 Q142 138 155 144 Q160 165 162 195 L165 280Z" />
-              <path
-                d="M132 170 Q145 195 160 220"
-                stroke="rgba(160, 120, 60, 0.6)"
-                strokeWidth="15"
-                strokeLinecap="round"
-                fill="none"
-              />
-            </g>
-
-            {/* Clasping hands aura */}
-            <circle
-              cx="110"
-              cy="190"
-              r="14"
-              fill="rgba(220, 185, 90, 0.3)"
-              filter="blur(4px)"
-            />
-            <path
-              d="M98 190 Q110 182 122 190"
-              stroke="rgba(255, 230, 150, 0.8)"
-              strokeWidth="2"
-              fill="none"
-            />
-
-            {/* Delicate celestial stars around medallion */}
-            {[35, 60, 160, 185].map((x, i) => (
-              <circle
-                key={i}
-                cx={x}
-                cy={35 + (i % 2) * 15}
-                r="1.5"
-                fill="rgba(220, 190, 100, 0.7)"
-              />
-            ))}
-          </svg>
+                <defs>
+                  <radialGradient id="portraitGlow" cx="50%" cy="45%" r="60%">
+                    <stop offset="0%" stopColor="rgba(201, 168, 76, 0.35)" />
+                    <stop offset="60%" stopColor="rgba(120, 80, 160, 0.15)" />
+                    <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
+                  </radialGradient>
+                  <linearGradient
+                    id="silhouetteGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stopColor="#281e14" />
+                    <stop offset="100%" stopColor="#120c08" />
+                  </linearGradient>
+                </defs>
+    
+                {/* Background oval medallion */}
+                <ellipse
+                  cx="110"
+                  cy="140"
+                  rx="98"
+                  ry="125"
+                  fill="#0c0910"
+                  stroke="rgba(201, 168, 76, 0.45)"
+                  strokeWidth="1.2"
+                />
+                <ellipse
+                  cx="110"
+                  cy="140"
+                  rx="92"
+                  ry="118"
+                  fill="url(#portraitGlow)"
+                />
+                <ellipse
+                  cx="110"
+                  cy="140"
+                  rx="88"
+                  ry="114"
+                  fill="none"
+                  stroke="rgba(201, 168, 76, 0.22)"
+                  strokeWidth="0.8"
+                  strokeDasharray="4 3"
+                />
+    
+                {/* Silhouette: Evelyn */}
+                <g
+                  fill="url(#silhouetteGrad)"
+                  stroke="rgba(201, 168, 76, 0.3)"
+                  strokeWidth="0.5"
+                >
+                  <ellipse cx="80" cy="85" rx="19" ry="24" />
+                  <path d="M56 280 Q62 170 80 145 Q90 130 105 136 Q98 148 92 180 L88 280Z" />
+                  <path
+                    d="M88 170 Q75 195 58 220"
+                    stroke="rgba(180, 140, 70, 0.6)"
+                    strokeWidth="16"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </g>
+    
+                {/* Silhouette: Adrian */}
+                <g
+                  fill="url(#silhouetteGrad)"
+                  stroke="rgba(201, 168, 76, 0.3)"
+                  strokeWidth="0.5"
+                >
+                  <ellipse cx="140" cy="84" rx="18" ry="23" />
+                  <path d="M118 280 Q122 190 132 160 Q142 138 155 144 Q160 165 162 195 L165 280Z" />
+                  <path
+                    d="M132 170 Q145 195 160 220"
+                    stroke="rgba(160, 120, 60, 0.6)"
+                    strokeWidth="15"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </g>
+    
+                {/* Clasping hands aura */}
+                <circle
+                  cx="110"
+                  cy="190"
+                  r="14"
+                  fill="rgba(220, 185, 90, 0.3)"
+                  filter="blur(4px)"
+                />
+                <path
+                  d="M98 190 Q110 182 122 190"
+                  stroke="rgba(255, 230, 150, 0.8)"
+                  strokeWidth="2"
+                  fill="none"
+                />
+    
+                {/* Delicate celestial stars around medallion */}
+                {[35, 60, 160, 185].map((x, i) => (
+                  <circle
+                    key={i}
+                    cx={x}
+                    cy={35 + (i % 2) * 15}
+                    r="1.5"
+                    fill="rgba(220, 190, 100, 0.7)"
+                  />
+                ))}
+              </svg>
+            }
+          />
         </div>
       </div>
 

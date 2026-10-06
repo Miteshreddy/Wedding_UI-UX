@@ -89,7 +89,7 @@
 }
 
 .map-card--3 {
-  bottom: clamp(6%, 10vh, 14%);
+  bottom: clamp(16%, 18vh, 22%);
   width: min(90vw, 360px);
   text-align: center;
 }
@@ -101,7 +101,7 @@
   .map-card--0 { left: clamp(2rem, 8vw, 12%); top: 50%; }
   .map-card--1 { left: auto; right: clamp(2rem, 8vw, 12%); top: 22%; }
   .map-card--2 { left: auto; right: clamp(2rem, 8vw, 12%); top: 48%; }
-  .map-card--3 { left: 50%; transform: translateX(-50%); bottom: 8%; }
+  .map-card--3 { left: clamp(2rem, 8vw, 12%); transform: rotate(1deg); bottom: 10%; top: auto; width: 290px; text-align: left; }
 }
 
 .map-card-header {
@@ -182,4 +182,9 @@
   .map-svg {
     height: min(78dvh, 580px);
   }
+}
+
+/* Destination lead sits under the map, never on top of a card */
+@media (min-width: 768px) {
+  .map-lead-newspaper { width: min(90vw, 300px); left: auto; right: clamp(2rem, 8vw, 12%); transform: none; bottom: 10%; }
 }

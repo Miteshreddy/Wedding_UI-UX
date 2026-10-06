@@ -9,6 +9,7 @@ import LoveConstellation from './components/LoveConstellation';
 import MagicalMap from './components/MagicalMap';
 import MemoryGallery from './components/MemoryGallery';
 import TimeKeeper from './components/TimeKeeper';
+import WeddingDetails from './components/WeddingDetails';
 import Countdown from './components/Countdown';
 import RSVP from './components/RSVP';
 import FinalReveal from './components/FinalReveal';
@@ -143,6 +144,9 @@ export default function App() {
 
             {/* Scene 5: The TimeKeeper — Interactive antique clock */}
             <TimeKeeper />
+
+            {/* Venue, dress code & registry */}
+            <WeddingDetails />
 
             {/* Scene 6: Astronomical Orrery Countdown */}
             <Countdown />

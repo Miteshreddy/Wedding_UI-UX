@@ -50,6 +50,38 @@ export const WEDDING = {
     { time: '8:00 PM', hour: 20, label: 'Dinner', description: 'A feast worthy of the occasion.', icon: '◈' },
     { time: '11:00 PM', hour: 23, label: 'Dancing', description: 'Let the night carry you away.', icon: '◉' },
   ],
+  details: {
+    venue: {
+      name: 'The Grand Hall',
+      address: 'Royal Mile, Edinburgh EH1, Scotland',
+      mapUrl: 'https://www.google.com/maps/search/?api=1&query=Royal+Mile+Edinburgh',
+      notes: [
+        'Ceremony & reception under one roof',
+        'Arrive by 3:30 PM — doors close at 4:00 PM',
+        'Waverley Station is a 10-minute walk',
+      ],
+    },
+    dressCode: {
+      title: 'Black Tie, Hogwarts Optional',
+      description:
+        'Formal evening attire in deep jewel tones. Show your house colours if you wish — a scarf, a tie, a touch of crimson, emerald, sapphire or gold.',
+      houses: [
+        { name: 'Gryffindor', colors: ['#7f0909', '#d3a625'] },
+        { name: 'Slytherin', colors: ['#1a472a', '#aaaaaa'] },
+        { name: 'Ravenclaw', colors: ['#0e1a40', '#946b2d'] },
+        { name: 'Hufflepuff', colors: ['#ecb939', '#372e29'] },
+      ],
+    },
+    registry: {
+      title: 'Our Gringotts Vault',
+      description:
+        'Your presence is the greatest gift. Should you wish to contribute, a small honeymoon fund and a short registry await in our vault.',
+      links: [
+        { label: 'Honeymoon Fund', url: '#' },
+        { label: 'Gift Registry', url: '#' },
+      ],
+    },
+  },
   invitationText: [
     'YOU ARE INVITED',
     'TO WITNESS',

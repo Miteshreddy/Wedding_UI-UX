@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { WEDDING } from '../data/weddingData';
 import { sound } from '../utils/audioSystem';
+import DeathlyHallows from './DeathlyHallows';
 import './EnvelopeIntro.css';
 
 // Utility: clamp a value between min and max
@@ -520,6 +521,11 @@ export default function EnvelopeIntro({ onComplete }) {
       <div className="env-cosmic-bg" aria-hidden="true" />
       <div className="env-fog-layer env-fog-layer-1" aria-hidden="true" />
       <div className="env-fog-layer env-fog-layer-2" aria-hidden="true" />
+
+      {/* Deathly Hallows emblem glowing behind the letter */}
+      <div className="env-hallows" aria-hidden="true">
+        <DeathlyHallows size="100%" strokeWidth={0.7} />
+      </div>
       
       {/* Dual Warm Candlelight Auras */}
       <div ref={candleGlowRef1} className="env-candle-glow env-candle-glow-1" aria-hidden="true" />
@@ -823,6 +829,11 @@ export default function EnvelopeIntro({ onComplete }) {
 
         {/* Ink text — editorial composition */}
         <div ref={inkTextRef} className="parchment-ink-container" aria-live="polite">
+          {/* Deathly Hallows sigil */}
+          <div className="ink-script-line ink-hallows">
+            <DeathlyHallows size={64} strokeWidth={2} title="Deathly Hallows" />
+          </div>
+
           {/* Small pre-title */}
           <p className="ink-script-line ink-pretitle t-display">
             YOU ARE INVITED

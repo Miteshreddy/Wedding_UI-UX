@@ -1171,3 +1171,42 @@
     transform: none !important;
   }
 }
+
+/* ─── Deathly Hallows motif ─────────────────────── */
+.env-hallows {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(66vmin, 520px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -60%);
+  color: rgba(214, 180, 96, 0.22);
+  filter: drop-shadow(0 0 10px rgba(214, 180, 96, 0.35));
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 1.2s ease;
+}
+.env-hallows .deathly-hallows path,
+.env-hallows .deathly-hallows circle {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: hallows-draw 3.2s var(--ease-reveal) forwards, hallows-breathe 6s ease-in-out 3.2s infinite;
+}
+.env-hallows .dh-stone { animation-delay: 0.6s, 3.8s; }
+.env-hallows .dh-wand { animation-delay: 1.2s, 4.4s; }
+.envelope-scene--opening .env-hallows,
+.envelope-scene--opened .env-hallows { opacity: 0; }
+
+@keyframes hallows-draw { to { stroke-dashoffset: 0; } }
+@keyframes hallows-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+.ink-hallows {
+  display: flex;
+  justify-content: center;
+  color: var(--gold-light);
+  filter: drop-shadow(0 0 8px rgba(240, 213, 136, 0.45));
+  margin-bottom: 0.6rem;
+}
+@media (max-height: 640px) {
+  .ink-hallows svg { width: 44px; height: 44px; }
+}

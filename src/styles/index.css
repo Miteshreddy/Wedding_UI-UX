@@ -201,8 +201,8 @@ canvas.fill-parent {
   position: relative;
   width: 100%;
   max-width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  /* Height is owned by each scene: full-screen pinned scenes set their own,
+     content sections size to their content so there are no dead gaps. */
   overflow: hidden;
   z-index: 1;
   padding-left: max(1rem, var(--sal));
