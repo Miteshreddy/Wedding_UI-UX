@@ -15,7 +15,12 @@ export default function WeddingDetails() {
 
       <div className="details-grid">
         <article className="details-card">
-          <span className="details-icon" aria-hidden="true">⌂</span>
+          <figure className="details-photo">
+            <img src={venue.photo} alt={`${venue.name} interior`} loading="lazy" decoding="async" />
+            <figcaption>
+              <a href={venue.photoCredit.url} target="_blank" rel="noopener noreferrer">Photo: {venue.photoCredit.text}</a>
+            </figcaption>
+          </figure>
           <h3 className="details-card-title t-display">The Venue</h3>
           <p className="details-lead t-serif">{venue.name}</p>
           <p className="details-text t-ink">{venue.address}</p>

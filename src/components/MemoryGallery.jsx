@@ -828,6 +828,7 @@ export default function MemoryGallery() {
                 </div>
                 <h3 className="liquid-meta-title t-display">{mem.title}</h3>
                 <p className="liquid-meta-caption t-ink">{mem.caption}</p>
+
               </div>
       ))}
 

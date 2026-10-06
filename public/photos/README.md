@@ -1,6 +1,7 @@
-# Couple photos
+# Photos
 
-Drop real photos here and they appear automatically (illustrations are shown until then):
+Replace these with the client's photos (same file names) and they show up automatically:
 
-- `couple.jpg` — portrait shown in the constellation medallion (framed by the Deathly Hallows)
-- `memory-1.jpg` … `memory-6.jpg` — the six memories shown inside the Pensieve
+- `couple.jpg` — portrait in the constellation medallion (cropped to an oval)
+- `memory-1.jpg` … `memory-6.jpg` — the six memories in the Pensieve (square works best, faces centred)
+- `venue.jpg` — venue photo in The Particulars section (see CREDITS.md)

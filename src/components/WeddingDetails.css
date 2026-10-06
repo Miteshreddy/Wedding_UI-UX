@@ -68,3 +68,8 @@
   transition: background 0.25s ease, color 0.25s ease;
 }
 .details-link:hover, .details-link:focus-visible { background: rgba(201, 168, 76, 0.15); color: var(--gold-pale); outline: none; }
+
+.details-photo { position: relative; margin: -0.3rem -0.3rem 0.4rem; border-radius: 4px; overflow: hidden; aspect-ratio: 16 / 9; border: 1px solid rgba(201, 168, 76, 0.35); }
+.details-photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: sepia(0.25) saturate(0.85) brightness(0.9); }
+.details-photo figcaption { position: absolute; right: 0; bottom: 0; padding: 0.15rem 0.4rem; background: rgba(10, 8, 12, 0.6); font-size: 0.6rem; }
+.details-photo figcaption a { color: var(--parchment-dark); text-decoration: none; opacity: 0.8; }

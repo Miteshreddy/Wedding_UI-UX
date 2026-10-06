@@ -54,6 +54,8 @@ export const WEDDING = {
     venue: {
       name: 'The Grand Hall',
       address: 'Royal Mile, Edinburgh EH1, Scotland',
+      photo: '/photos/venue.jpg',
+      photoCredit: { text: 'Osama Shukir Muhammed Amin FRCP(Glasg) · CC BY-SA 4.0', url: 'https://commons.wikimedia.org/wiki/File:Interior_of_the_Great_Hall_at_Edinburgh_Castle,_Scotland.jpg' },
       mapUrl: 'https://www.google.com/maps/search/?api=1&query=Royal+Mile+Edinburgh',
       notes: [
         'Ceremony & reception under one roof',
