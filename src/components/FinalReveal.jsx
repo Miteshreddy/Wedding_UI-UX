@@ -6,6 +6,7 @@ import { sound } from '../utils/audioSystem';
 import { NAV_ITEMS, scrollToSection } from './NavBar';
 import { downloadCalendarInvite } from '../utils/calendar';
 import { WEDDING } from '../data/weddingData';
+import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './FinalReveal.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -34,8 +35,9 @@ export default function FinalReveal() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const gate = visibilityGate(canvas);
     let animId;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = canvasDpr();
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -50,8 +52,8 @@ export default function FinalReveal() {
     const vortexState = { converge: 0 };
 
     // 120 floating particles that vortex and gather into center
-    const particles = Array.from({ length: 120 }, (_, i) => {
-      const angle = (i / 120) * Math.PI * 2;
+    const particles = Array.from({ length: scaled(120) }, (_, i) => {
+      const angle = (i / scaled(120)) * Math.PI * 2;
       const dist = 180 + Math.random() * 260;
       return {
         x: Math.random(),
@@ -69,6 +71,7 @@ export default function FinalReveal() {
     let time = 0;
 
     const draw = () => {
+      if (!gate.on) { animId = requestAnimationFrame(draw); return; }
       const W = canvas.width / dpr;
       const H = canvas.height / dpr;
       const cx = W / 2;
@@ -101,7 +104,7 @@ export default function FinalReveal() {
         ctx.arc(px, py, p.size * (1 + cFactor * 0.4), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(225, 195, 100, ${a.toFixed(3)})`;
         ctx.shadowColor = 'rgba(201, 168, 76, 0.5)';
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = IS_LOW_POWER ? 0 : 6;
         ctx.fill();
         ctx.shadowBlur = 0;
       });
@@ -238,6 +241,7 @@ export default function FinalReveal() {
 
     return () => {
       cancelAnimationFrame(animId);
+      gate.disconnect();
       window.removeEventListener('resize', resize);
       gsapCtx.revert();
     };

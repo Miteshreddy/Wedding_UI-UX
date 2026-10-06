@@ -4,9 +4,9 @@
 
 .constellation-section {
   min-height: 100vh;
-  min-height: 100dvh;
+  min-height: 100svh;
   height: 100vh;
-  height: 100dvh;
+  height: 100svh;
   width: 100%;
   background: transparent;
   display: flex;
@@ -249,4 +249,28 @@
 
 @media (max-width: 767px) {
   .constellation-hallows { width: 170%; transform: translate(-50%, -56%); }
+}
+
+/* Short screens (phones in landscape): keep portrait and caption apart */
+@media (max-height: 500px) {
+  .constellation-photo { top: 44%; }
+  .couple-illustration, .couple-photo { width: clamp(90px, 28svh, 150px); }
+  .constellation-caption { bottom: 0.6rem; }
+  .constellation-caption .caption-line { font-size: 0.95rem; }
+  .constellation-caption .caption-sub { display: none; }
+  .milestone-card { max-height: 70svh; overflow: hidden; }
+}
+
+@media (min-width: 640px) and (max-height: 500px) {
+  .constellation-photo { left: 34%; }
+  .milestone-card,
+  .milestone-card--0, .milestone-card--1, .milestone-card--2, .milestone-card--3 {
+    left: auto;
+    right: max(3vw, var(--sar));
+    top: 50%;
+    bottom: auto;
+    width: min(42vw, 320px);
+    transform: translateY(-40%);
+  }
+  .constellation-caption { left: 34%; }
 }

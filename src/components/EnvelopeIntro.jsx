@@ -4,6 +4,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { WEDDING } from '../data/weddingData';
 import { sound } from '../utils/audioSystem';
 import DeathlyHallows from './DeathlyHallows';
+import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './EnvelopeIntro.css';
 
 // Utility: clamp a value between min and max
@@ -159,7 +160,7 @@ export default function EnvelopeIntro({ onComplete }) {
     const canvas = sparkCanvasRef.current;
     if (!canvas || prefersReduced) return;
     const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = canvasDpr();
     const rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
@@ -171,8 +172,8 @@ export default function EnvelopeIntro({ onComplete }) {
     const cy = H / 2 - 10;
 
     // Wax fragments + golden sparks
-    const particles = Array.from({ length: 65 }, (_, i) => {
-      const angle = (i / 65) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
+    const particles = Array.from({ length: scaled(65) }, (_, i) => {
+      const angle = (i / scaled(65)) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
       const speed = 2.5 + Math.random() * 6.0;
       const isWax = Math.random() > 0.4;
       return {
@@ -209,7 +210,7 @@ export default function EnvelopeIntro({ onComplete }) {
         ctx.arc(0, 0, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `${p.color} ${Math.max(0, p.alpha).toFixed(2)})`;
         ctx.shadowColor = '#c9a84c';
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = IS_LOW_POWER ? 0 : 6;
         ctx.fill();
         ctx.restore();
       });

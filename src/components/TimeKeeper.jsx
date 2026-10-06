@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
 import SectionHeader from './SectionHeader';
+import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './TimeKeeper.css';
 
 // 4 Signature Event Times & Atmospheric Themes
@@ -82,7 +83,8 @@ export default function TimeKeeper() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const gate = visibilityGate(canvas);
+    const dpr = canvasDpr();
     let animId;
 
     const resize = () => {
@@ -95,7 +97,7 @@ export default function TimeKeeper() {
     window.addEventListener('resize', resize, { passive: true });
 
     // Dynamic particle pool
-    const particles = Array.from({ length: 65 }, () => ({
+    const particles = Array.from({ length: scaled(65) }, () => ({
       x: Math.random() * (canvas.width / dpr),
       y: Math.random() * (canvas.height / dpr),
       vx: (Math.random() - 0.5) * 0.4,
@@ -105,6 +107,7 @@ export default function TimeKeeper() {
     }));
 
     const render = () => {
+      if (!gate.on) { animId = requestAnimationFrame(render); return; }
       const W = canvas.width / dpr;
       const H = canvas.height / dpr;
       ctx.clearRect(0, 0, W, H);
@@ -128,7 +131,7 @@ export default function TimeKeeper() {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `${colorPrefix} ${a})`;
         ctx.shadowColor = selectedEvent.accentColor;
-        ctx.shadowBlur = 6;
+        ctx.shadowBlur = IS_LOW_POWER ? 0 : 6;
         ctx.fill();
         ctx.shadowBlur = 0;
       });
@@ -139,6 +142,7 @@ export default function TimeKeeper() {
 
     return () => {
       cancelAnimationFrame(animId);
+      gate.disconnect();
       window.removeEventListener('resize', resize);
     };
   }, [selectedEvent, prefersReduced]);

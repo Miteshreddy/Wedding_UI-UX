@@ -430,3 +430,15 @@
 .countdown-btn:hover, .countdown-btn:focus-visible { background: rgba(212, 175, 55, 0.16); transform: translateY(-1px); }
 .countdown-btn--primary { background: linear-gradient(180deg, #8c0a0b, #5e0001); color: #f7e7b4; }
 .countdown-btn--primary:hover { background: linear-gradient(180deg, #a10f10, #6e0102); }
+
+/* Phones: same look without live blurs and animated filters */
+@media (pointer: coarse), (max-width: 767px) {
+  .countdown-master-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: linear-gradient(160deg, rgba(26, 20, 34, 0.96), rgba(12, 9, 18, 0.97));
+  }
+  .card-ambient-glow { animation: none; filter: none; opacity: 0.5; }
+  .crest-star { animation: none; }
+  .countdown-date-badge, .pod-num, .ring-progress { filter: none; }
+}

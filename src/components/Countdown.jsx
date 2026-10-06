@@ -6,6 +6,7 @@ import { sound } from '../utils/audioSystem';
 import { downloadCalendarInvite } from '../utils/calendar';
 import { scrollToSection } from './NavBar';
 import SectionHeader from './SectionHeader';
+import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './Countdown.css';
 
 const TARGET_DATE = new Date(WEDDING.date.iso);
@@ -76,7 +77,8 @@ export default function Countdown() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const gate = visibilityGate(canvas);
+    const dpr = canvasDpr();
     let animId;
 
     const resize = () => {
@@ -89,7 +91,7 @@ export default function Countdown() {
     window.addEventListener('resize', resize, { passive: true });
 
     // 40 celestial stardust particles with constellation connections
-    const particles = Array.from({ length: 40 }, () => ({
+    const particles = Array.from({ length: scaled(40) }, () => ({
       x: Math.random(),
       y: Math.random(),
       vx: (Math.random() - 0.5) * 0.0003,
@@ -101,12 +103,13 @@ export default function Countdown() {
     }));
 
     const draw = () => {
+      if (!gate.on) { animId = requestAnimationFrame(draw); return; }
       const W = canvas.width / dpr;
       const H = canvas.height / dpr;
       ctx.clearRect(0, 0, W, H);
 
-      // Draw subtle constellation filaments between close particles
-      for (let i = 0; i < particles.length; i++) {
+      // Draw subtle constellation filaments between close particles (skipped on phones: O(n²))
+      for (let i = 0; i < (IS_LOW_POWER ? 0 : particles.length); i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = (particles[i].x - particles[j].x) * W;
           const dy = (particles[i].y - particles[j].y) * H;
@@ -154,6 +157,7 @@ export default function Countdown() {
 
     return () => {
       cancelAnimationFrame(animId);
+      gate.disconnect();
       window.removeEventListener('resize', resize);
     };
   }, [prefersReduced]);

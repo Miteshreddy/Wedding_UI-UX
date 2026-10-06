@@ -69,7 +69,7 @@
 }
 
 .pensieve-basin {
-  --pool: min(78vw, 400px);
+  --pool: min(78vw, 400px, 58svh);
   position: relative;
   width: calc(var(--pool) + 48px);
   aspect-ratio: 1;

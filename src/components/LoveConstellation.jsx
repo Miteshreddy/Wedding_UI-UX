@@ -6,6 +6,7 @@ import { sound } from '../utils/audioSystem';
 import DeathlyHallows from './DeathlyHallows';
 import CouplePhoto from './CouplePhoto';
 import SectionHeader from './SectionHeader';
+import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './LoveConstellation.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -76,7 +77,8 @@ export default function LoveConstellation() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const gate = visibilityGate(canvas);
+    const dpr = canvasDpr();
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -90,7 +92,7 @@ export default function LoveConstellation() {
     const state = { progress: 0 };
 
     // Background starfield
-    const stars = Array.from({ length: 140 }, (_, i) => ({
+    const stars = Array.from({ length: scaled(140) }, (_, i) => ({
       x: ((i * 137.5) % 100) / 100,
       y: ((i * 93.7 + 7) % 100) / 100,
       size: 0.4 + (i % 5) * 0.3,
@@ -110,8 +112,8 @@ export default function LoveConstellation() {
     ];
 
     // Radial shockwave sparks for collision
-    const sparks = Array.from({ length: 55 }, (_, i) => {
-      const angle = (i / 55) * Math.PI * 2;
+    const sparks = Array.from({ length: scaled(55) }, (_, i) => {
+      const angle = (i / scaled(55)) * Math.PI * 2;
       const speed = 0.6 + (i % 5) * 0.3;
       return {
         cos: Math.cos(angle),
@@ -152,6 +154,7 @@ export default function LoveConstellation() {
     };
 
     const drawFrame = () => {
+      if (!gate.on) { animId = requestAnimationFrame(drawFrame); return; }
       const W = canvas.width / dpr;
       const H = canvas.height / dpr;
       const prog = state.progress;
@@ -569,6 +572,7 @@ export default function LoveConstellation() {
 
     return () => {
       cancelAnimationFrame(animId);
+      gate.disconnect();
       window.removeEventListener('resize', resize);
       gsapCtx.revert();
     };

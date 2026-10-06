@@ -44,9 +44,19 @@ export default function NavBar() {
       }
       setActive(current);
     };
+    // At most one measurement per frame, however fast scroll events arrive
+    let ticking = false;
+    const onScrollThrottled = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        onScroll();
+      });
+    };
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScrollThrottled, { passive: true });
+    return () => window.removeEventListener('scroll', onScrollThrottled);
   }, []);
 
   // Close the mobile menu on Escape and lock background scroll while open

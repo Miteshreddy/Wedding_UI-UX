@@ -391,3 +391,29 @@ canvas.fill-parent {
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
   mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
 }
+
+/* ─── Low-power (touch) devices: drop the costliest paint effects ─── */
+@media (pointer: coarse), (max-width: 767px) {
+  .noise-overlay { animation: none; opacity: 0.025; }
+  .pensieve-mist { filter: none; mix-blend-mode: normal; opacity: 0.45; animation-duration: 40s; }
+  .pensieve-mist--2 { display: none; }
+  .liquid-photo-frame { mix-blend-mode: normal; }
+  .pensieve-runes { animation: none; }
+  .site-nav--solid, .liquid-card-meta { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .site-nav--solid { background: rgba(8, 8, 20, 0.95); }
+  .map-svg { filter: none; }
+  .fc-candle { filter: none; }
+  .fc-flame { box-shadow: 0 0 10px 3px rgba(255, 180, 80, 0.35); }
+}
+
+/* Off-screen scenes: freeze decorative animations and release GPU layers */
+.scene.is-offscreen *,
+.scene.is-offscreen *::before,
+.scene.is-offscreen *::after {
+  animation-play-state: paused !important;
+  will-change: auto !important;
+}
+
+@media (pointer: coarse), (max-width: 767px) {
+  * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+}

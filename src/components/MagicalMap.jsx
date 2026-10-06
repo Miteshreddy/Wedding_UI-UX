@@ -98,7 +98,8 @@ export default function MagicalMap() {
     }
 
     const ctx = gsap.context(() => {
-      const isMobile = window.innerWidth < 768;
+      // Narrow phones and short landscape phones both use the single-card layout
+      const isMobile = window.innerWidth < 768 || window.innerHeight < 500;
       const scrollLength = isMobile ? '+=320%' : '+=450%';
 
       // Title card dissolves before the first footsteps appear
@@ -146,7 +147,9 @@ export default function MagicalMap() {
         tl.to(fp, { opacity: 0.45, duration: 0.06, ease: 'none' }, step.t + 0.04);
       });
 
-      // 3. Reveal milestone markers with handwritten annotations
+      // 3. Reveal milestone markers with handwritten annotations.
+      // Phones have no room beside the map, so cards share one slot below it
+      // and each one hands over to the next instead of stacking on the map.
       MAP_STOPS.forEach((stop, i) => {
         const el = stopsRef.current[i];
         if (!el) return;
@@ -156,10 +159,14 @@ export default function MagicalMap() {
           { opacity: 1, scale: 1, y: 0, duration: 0.1, ease: 'back.out(1.8)' },
           stop.t
         );
+        const prev = stopsRef.current[i - 1];
+        if (isMobile && prev) {
+          tl.to(prev, { opacity: 0, y: -12, duration: 0.06, ease: 'power1.in' }, stop.t - 0.03);
+        }
       });
 
       // 4. MAP -> MEMORY TRANSITION: Final destination expands into ornate photo frame
-      if (destinationFrameRef.current) {
+      if (destinationFrameRef.current && !isMobile) {
         tl.fromTo(
           destinationFrameRef.current,
           { opacity: 0, scale: 0.7, filter: 'blur(8px)' },

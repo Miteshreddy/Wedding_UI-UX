@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './WorldCanvas.css';
 
 /**
@@ -47,7 +48,7 @@ function getWorldPhase(progress) {
   };
 }
 
-const STATIC_STARS = Array.from({ length: 260 }, (_, i) => ({
+const STATIC_STARS = Array.from({ length: scaled(260) }, (_, i) => ({
   x: ((i * 137.508) % 100) / 100,
   y: ((i * 97.31 + 13) % 100) / 100,
   size: 0.3 + (i % 6) * 0.22,
@@ -56,7 +57,7 @@ const STATIC_STARS = Array.from({ length: 260 }, (_, i) => ({
   phase: i * 0.72,
 }));
 
-const DUST = Array.from({ length: 80 }, () => ({
+const DUST = Array.from({ length: scaled(80) }, () => ({
   x: Math.random(),
   y: Math.random(),
   vx: (Math.random() - 0.5) * 0.00015,
@@ -65,22 +66,33 @@ const DUST = Array.from({ length: 80 }, () => ({
   phase: Math.random() * Math.PI * 2,
 }));
 
-export default function WorldCanvas({ scrollProgress = 0 }) {
+export default function WorldCanvas() {
   const canvasRef = useRef(null);
-  const progressRef = useRef(scrollProgress);
+  const progressRef = useRef(0);
   const animRef = useRef(null);
   const timeRef = useRef(0);
 
+  // Read scroll position directly each frame (no React re-render per scroll)
   useEffect(() => {
-    progressRef.current = scrollProgress;
-  }, [scrollProgress]);
+    const update = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progressRef.current = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = canvasDpr();
 
     const resize = () => {
       const W = window.innerWidth;
@@ -92,12 +104,21 @@ export default function WorldCanvas({ scrollProgress = 0 }) {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const draw = () => {
+    // Phones: the slow twinkle reads the same at ~8fps, and a full-screen
+    // canvas repaint every frame was the largest scroll cost on mobile.
+    const minGap = IS_LOW_POWER ? 120 : 0;
+    let lastDraw = 0;
+    const draw = (now = performance.now()) => {
+      if (document.hidden || now - lastDraw < minGap) {
+        animRef.current = requestAnimationFrame(draw);
+        return;
+      }
+      lastDraw = now;
       const W = canvas.width / dpr;
       const H = canvas.height / dpr;
       const progress = progressRef.current;
       const world = getWorldPhase(progress);
-      timeRef.current += 0.01;
+      timeRef.current += IS_LOW_POWER ? 0.07 : 0.01;
       const t = timeRef.current;
 
       // 1. Background gradient

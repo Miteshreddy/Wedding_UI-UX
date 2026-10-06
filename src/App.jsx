@@ -20,63 +20,51 @@ import { sound } from './utils/audioSystem';
 import './styles/index.css';
 
 gsap.registerPlugin(ScrollTrigger);
+// Mobile address-bar show/hide changes the viewport height on every scroll;
+// recalculating pins then makes the page jump. Ignore those height-only resizes.
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 export default function App() {
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const scrollRef = useRef(null);
-  const rafRef = useRef(null);
 
-  // Track scroll progress for WorldCanvas (0..1 across the full page)
-  const updateScrollProgress = useCallback(() => {
-    const docH = document.documentElement.scrollHeight - window.innerHeight;
-    if (docH <= 0) return;
-    const prog = Math.min(1, Math.max(0, window.scrollY / docH));
-    setScrollProgress(prog);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = requestAnimationFrame(updateScrollProgress);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    updateScrollProgress();
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [updateScrollProgress]);
-
-  // Refresh ScrollTrigger on resize / orientation change / mobile viewport changes
+  // Refresh ScrollTrigger only when the width changes (rotation, desktop resize),
+  // never for the mobile address bar collapsing/expanding.
   useEffect(() => {
     let refreshTimer;
-    const debouncedRefresh = () => {
+    let lastWidth = window.innerWidth;
+    const onResize = () => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
       clearTimeout(refreshTimer);
-      refreshTimer = setTimeout(() => {
-        ScrollTrigger.refresh();
-        updateScrollProgress();
-      }, 200);
+      refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
     };
-
-    window.addEventListener('resize', debouncedRefresh, { passive: true });
-    window.addEventListener('orientationchange', debouncedRefresh);
-
-    // Handle mobile browser UI changes (address bar show/hide)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', debouncedRefresh);
-    }
-
+    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('orientationchange', onResize);
     return () => {
       clearTimeout(refreshTimer);
-      window.removeEventListener('resize', debouncedRefresh);
-      window.removeEventListener('orientationchange', debouncedRefresh);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', debouncedRefresh);
-      }
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('orientationchange', onResize);
     };
-  }, [updateScrollProgress]);
+  }, []);
+
+  // Pause CSS animations (and drop layer hints) in scenes that are off screen
+  useEffect(() => {
+    const main = scrollRef.current;
+    if (!main || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.classList.toggle('is-offscreen', !e.isIntersecting)),
+      { rootMargin: '150px 0px' }
+    );
+    const observeAll = () => main.querySelectorAll('section.scene').forEach((el) => io.observe(el));
+    observeAll();
+    const mo = new MutationObserver(observeAll);
+    mo.observe(main, { childList: true });
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
 
   const handleEnvelopeComplete = useCallback(() => {
     setEnvelopeOpened(true);
@@ -84,10 +72,9 @@ export default function App() {
     requestAnimationFrame(() => {
       setTimeout(() => {
         ScrollTrigger.refresh();
-        updateScrollProgress();
-      }, 100);
+              }, 100);
     });
-  }, [updateScrollProgress]);
+  }, []);
 
   // Lock body scroll while envelope is unopened
   useEffect(() => {
@@ -121,7 +108,7 @@ export default function App() {
       <NoiseOverlay />
 
       {/* Persistent world canvas backdrop */}
-      <WorldCanvas scrollProgress={scrollProgress} />
+      <WorldCanvas />
       <FloatingCandles />
 
       {envelopeOpened && <NavBar />}
