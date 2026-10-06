@@ -7,12 +7,14 @@ import DeathlyHallows from './DeathlyHallows';
 import CouplePhoto from './CouplePhoto';
 import SectionHeader from './SectionHeader';
 import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
+import { useCompactLayout } from '../hooks/useCompactLayout';
+import StoryCompact from './StoryCompact';
 import './LoveConstellation.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
 // 4 Signature milestone nodes across celestial journey
-const MILESTONES = [
+export const MILESTONES = [
   {
     id: 0,
     t: 0.18,
@@ -64,7 +66,7 @@ const MILESTONES = [
   },
 ];
 
-export default function LoveConstellation() {
+function ConstellationScene() {
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
   const storyCardsRef = useRef([]);
@@ -786,4 +788,10 @@ export default function LoveConstellation() {
       </div>
     </section>
   );
+}
+
+// Desktop: the scroll-driven constellation. Phones: a simple flowing timeline.
+export default function LoveConstellation() {
+  const compact = useCompactLayout();
+  return compact ? <StoryCompact /> : <ConstellationScene />;
 }
