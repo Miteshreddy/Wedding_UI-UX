@@ -49,7 +49,7 @@
 
 /* Fewer, quieter candles on small screens so content stays readable */
 @media (max-width: 767px) {
-  .fc-candle--wide, .fc-candle:nth-child(n + 6) { display: none; }
+  .fc-candle:not(.fc-candle--edge) { display: none; } /* phones: only candles at the screen edges, never over text */
   .fc-flame { animation-duration: 2.4s; }
   .fc-candle { opacity: calc(0.2 + var(--s) * 0.35); }
 }

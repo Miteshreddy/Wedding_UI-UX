@@ -14,7 +14,7 @@
   animation: nav-in 0.8s var(--ease-reveal) backwards; /* not "both": a lingering transform would trap the fixed mobile menu */
 }
 .site-nav--solid {
-  background: rgba(8, 8, 20, 0.86);
+  background: rgba(8, 8, 20, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 1px 0 rgba(212, 175, 55, 0.22), 0 10px 30px rgba(0, 0, 0, 0.45);

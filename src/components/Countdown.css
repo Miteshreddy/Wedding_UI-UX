@@ -429,7 +429,7 @@
 }
 .countdown-btn:hover, .countdown-btn:focus-visible { background: rgba(212, 175, 55, 0.16); transform: translateY(-1px); }
 .countdown-btn--primary { background: linear-gradient(180deg, #8c0a0b, #5e0001); color: #f7e7b4; }
-.countdown-btn--primary:hover { background: linear-gradient(180deg, #a10f10, #6e0102); }
+.countdown-btn--primary:hover, .countdown-btn--primary:focus-visible { background: linear-gradient(180deg, #a10f10, #6e0102); }
 
 /* Phones: same look without live blurs and animated filters */
 @media (pointer: coarse), (max-width: 767px) {

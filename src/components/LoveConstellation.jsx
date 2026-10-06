@@ -169,7 +169,8 @@ export default function LoveConstellation() {
         0,
         W * 0.5,
         H * 0.5,
-        W * 0.8
+        // size from the diagonal: width-based radii drew a visible disc on tall phones
+        Math.hypot(W, H) * 0.55
       );
       bg.addColorStop(0, '#0d091a');
       bg.addColorStop(0.5, '#080612');
@@ -184,7 +185,7 @@ export default function LoveConstellation() {
         20,
         W * 0.5,
         H * 0.5,
-        W * 0.5
+        Math.hypot(W, H) * 0.4
       );
       nebula.addColorStop(0, 'rgba(90, 50, 140, 0.12)');
       nebula.addColorStop(0.5, 'rgba(40, 60, 120, 0.06)');
@@ -352,12 +353,11 @@ export default function LoveConstellation() {
         ctx.fill();
 
         if (prog < 0.75) {
-          ctx.font = `300 12px 'Cormorant Garamond', serif`;
-          ctx.fillStyle = `rgba(190, 220, 255, ${(1 - prog * 1.25).toFixed(
-            2
-          )})`;
+          // Readable name label (was 12px light, which vanished on phones)
+          ctx.font = `600 ${W < 600 ? 15 : 17}px 'Cinzel', serif`;
+          ctx.fillStyle = `rgba(190, 220, 255, ${Math.min(1, 1.15 - prog * 1.4).toFixed(2)})`;
           ctx.textAlign = 'center';
-          ctx.fillText('Evelyn', evX, evY - 18);
+          ctx.fillText('Evelyn', evX, evY - 22);
         }
       }
 
@@ -378,12 +378,11 @@ export default function LoveConstellation() {
         ctx.fill();
 
         if (prog < 0.75) {
-          ctx.font = `300 12px 'Cormorant Garamond', serif`;
-          ctx.fillStyle = `rgba(255, 225, 140, ${(1 - prog * 1.25).toFixed(
-            2
-          )})`;
+          // Readable name label (was 12px light, which vanished on phones)
+          ctx.font = `600 ${W < 600 ? 15 : 17}px 'Cinzel', serif`;
+          ctx.fillStyle = `rgba(255, 225, 140, ${Math.min(1, 1.15 - prog * 1.4).toFixed(2)})`;
           ctx.textAlign = 'center';
-          ctx.fillText('Adrian', adX, adY - 18);
+          ctx.fillText('Adrian', adX, adY - 22);
         }
       }
 
@@ -521,7 +520,8 @@ export default function LoveConstellation() {
             const p = self.progress;
             // Hide each card before the next one appears so cards never stack
             const next = MILESTONES[i + 1];
-            const hideAt = next ? Math.min(m.t + 0.16, next.t - 0.09) : m.t + 0.16;
+            // Hand over exactly when the next card arrives: no stacking, and no empty stretches of sky
+            const hideAt = next ? next.t - 0.08 : 1.01;
             const isVisible = p >= m.t - 0.08 && p < hideAt;
 
             if (isVisible && lastSoundPlayed !== i && p >= m.t - 0.02) {

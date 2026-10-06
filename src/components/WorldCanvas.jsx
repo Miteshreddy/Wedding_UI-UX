@@ -178,9 +178,10 @@ export default function WorldCanvas() {
       });
 
       // 5. Vignette
-      const vignette = ctx.createRadialGradient(W / 2, H / 2, H * 0.25, W / 2, H / 2, W * 0.9);
+      // Wide, gentle vignette: the old tight one showed as a hard dark oval with visible banding
+      const vignette = ctx.createRadialGradient(W / 2, H / 2, Math.max(W, H) * 0.35, W / 2, H / 2, Math.hypot(W, H) * 0.62);
       vignette.addColorStop(0, 'rgba(0,0,0,0)');
-      vignette.addColorStop(1, `rgba(${Math.round(r - 2)},${Math.round(g - 2)},${Math.round(b - 1)},0.75)`);
+      vignette.addColorStop(1, `rgba(${Math.round(r - 2)},${Math.round(g - 2)},${Math.round(b - 1)},0.4)`);
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, W, H);
 

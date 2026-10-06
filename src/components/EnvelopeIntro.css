@@ -1237,3 +1237,8 @@
   .envelope-scene--opened .env-fog-layer,
   .envelope-scene--opened .env-hallows { display: none; }
 }
+
+/* Once the letter is open, the idle-scene glow and emblem are hidden on every
+   screen size; they otherwise linger as a red smudge while scrolling away. */
+.envelope-scene--opened .env-candle-glow,
+.envelope-scene--opened .env-hallows { display: none; }

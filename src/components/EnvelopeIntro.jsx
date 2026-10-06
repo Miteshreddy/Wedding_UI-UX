@@ -456,14 +456,14 @@ export default function EnvelopeIntro({ onComplete }) {
       2.45
     );
 
-    // ANIMATED CALLIGRAPHY INK WRITING (3.2s – 4.8s)
+    // ANIMATED CALLIGRAPHY INK WRITING (2.5s – 3.9s)
     masterTl.call(
       () => {
         setPhase('opened');
         sound.playInkWrite();
       },
       [],
-      3.2
+      2.5
     );
 
     if (inkTextRef.current) {
@@ -481,12 +481,13 @@ export default function EnvelopeIntro({ onComplete }) {
           y: 0,
           filter: 'blur(0px)',
           letterSpacing: '0.12em',
-          stagger: 0.22,
-          duration: 0.65,
+          stagger: 0.14,
+          duration: 0.6,
           ease: 'power3.out',
           onStart: () => sound.playInkWrite(),
         },
-        3.3
+        // starts as the parchment fades in, so there is no blank pause
+        2.55
       );
     }
 
@@ -496,7 +497,7 @@ export default function EnvelopeIntro({ onComplete }) {
         scrollCueRef.current,
         { opacity: 0, y: 22, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: 'power2.out' },
-        4.4
+        3.5
       );
     }
 
@@ -507,7 +508,7 @@ export default function EnvelopeIntro({ onComplete }) {
         onComplete?.();
       },
       [],
-      4.7
+      3.8
     );
   }, [phase, prefersReduced, triggerWaxBurst, onComplete]);
 

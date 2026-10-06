@@ -374,7 +374,7 @@ canvas.fill-parent {
   pointer-events: none;
   background: radial-gradient(ellipse at 50% 50%, rgba(7, 8, 22, 0.88) 0%, rgba(7, 8, 22, 0.55) 55%, transparent 80%);
 }
-.scene-intro--map { background: radial-gradient(ellipse at 50% 50%, rgba(7, 8, 22, 0.94) 0%, rgba(7, 8, 22, 0.8) 60%, rgba(7, 8, 22, 0.4) 100%); }
+.scene-intro--map { background: #070816; } /* opaque: a see-through cover showed the map as a muddy grey box */
 .scene-intro .section-header { margin-bottom: 1rem; }
 .scene-intro-cue {
   color: var(--gold);

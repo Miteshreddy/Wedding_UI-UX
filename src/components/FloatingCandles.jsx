@@ -14,7 +14,7 @@ export default function FloatingCandles() {
       {CANDLES.map((c, i) => (
         <span
           key={i}
-          className={`fc-candle ${i > 7 ? 'fc-candle--wide' : ''}`}
+          className={`fc-candle ${c.x <= 8 || c.x >= 92 ? 'fc-candle--edge' : ''}`}
           style={{ left: `${c.x}%`, top: `${c.y}%`, '--s': c.s, animationDelay: `-${c.d}s` }}
         >
           <span className="fc-flame" style={{ animationDelay: `-${c.d * 0.7}s` }} />

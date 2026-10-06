@@ -138,9 +138,11 @@ export default function FinalReveal() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 85%',
+          start: 'top 70%',
           end: 'bottom 90%',
-          scrub: 0.8,
+          // Play the reveal once (not scrubbed) so the names are never left
+          // half-blurred mid-scroll.
+          toggleActions: 'play none none none',
           onUpdate: (self) => {
             vortexState.converge = self.progress;
             if (self.progress > 0.25 && !soundTriggered) {
@@ -150,6 +152,7 @@ export default function FinalReveal() {
           },
         },
       });
+      tl.timeScale(0.55);
 
       if (line1Ref.current) {
         tl.fromTo(
