@@ -1,0 +1,54 @@
+.floating-candles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fc-candle {
+  position: absolute;
+  width: calc(14px * var(--s));
+  height: calc(58px * var(--s));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: calc(0.45 + var(--s) * 0.5);
+  animation: fc-float 7s ease-in-out infinite;
+  filter: blur(calc((1 - var(--s)) * 1.2px));
+}
+
+.fc-flame {
+  width: calc(10px * var(--s));
+  height: calc(18px * var(--s));
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 50% 70%, #fffbe6 0%, #ffd56b 40%, #ff9d2e 75%, transparent 100%);
+  box-shadow: 0 0 calc(26px * var(--s)) calc(10px * var(--s)) rgba(255, 180, 80, 0.4), 0 0 calc(70px * var(--s)) calc(20px * var(--s)) rgba(255, 170, 70, 0.12);
+  transform-origin: 50% 100%;
+  animation: fc-flicker 1.6s ease-in-out infinite alternate;
+}
+
+.fc-wax {
+  flex: 1;
+  width: 100%;
+  margin-top: 1px;
+  border-radius: 2px 2px 1px 1px;
+  background: linear-gradient(90deg, #cdbf9f 0%, #f6efdc 45%, #d8cbad 100%);
+  box-shadow: 0 -2px 6px rgba(255, 200, 110, 0.35) inset;
+}
+
+@keyframes fc-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@keyframes fc-flicker {
+  0% { transform: scale(1, 1) rotate(-2deg); opacity: 0.95; }
+  50% { transform: scale(0.92, 1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1.04, 0.94) rotate(-1deg); opacity: 0.88; }
+}
+
+/* Fewer, quieter candles on small screens so content stays readable */
+@media (max-width: 767px) {
+  .fc-candle--wide { display: none; }
+  .fc-candle { opacity: calc(0.2 + var(--s) * 0.35); }
+}

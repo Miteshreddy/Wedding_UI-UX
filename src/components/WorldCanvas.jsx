@@ -7,23 +7,17 @@ import './WorldCanvas.css';
  * Receives a scrollProgress prop (0..1) from App to drive its visual state.
  */
 
+// One cohesive "enchanted Great Hall ceiling" — a midnight sky that only
+// shifts gently in warmth as the evening progresses down the page.
 const WORLD_PHASES = [
-  // 0.00 – 0.12 : Constellation / Invitation (deep indigo, starfield)
-  { bg: [6, 4, 14], nebula: [60, 30, 120], starCount: 220, dustCount: 30 },
-  // 0.12 – 0.28 : Map transition (warm amber starts bleeding in)
-  { bg: [8, 6, 10], nebula: [80, 50, 30], starCount: 160, dustCount: 45 },
-  // 0.28 – 0.44 : Ancient Map (warm parchment amber, aged paper)
-  { bg: [10, 8, 6], nebula: [120, 80, 30], starCount: 80, dustCount: 60 },
-  // 0.44 – 0.60 : Chronicle Gallery (newsprint, cooler)
-  { bg: [7, 6, 10], nebula: [40, 35, 55], starCount: 40, dustCount: 25 },
-  // 0.60 – 0.72 : TimeKeeper (warm brass, candle-amber)
-  { bg: [10, 7, 4], nebula: [110, 70, 20], starCount: 50, dustCount: 40 },
-  // 0.72 – 0.86 : Countdown (deep cosmos, celestial purple-blue)
-  { bg: [4, 4, 12], nebula: [30, 40, 100], starCount: 200, dustCount: 55 },
-  // 0.86 – 0.94 : RSVP (dark parchment candlelight)
-  { bg: [8, 5, 3], nebula: [90, 55, 15], starCount: 60, dustCount: 30 },
-  // 0.94 – 1.00 : Final Reveal (star convergence, warm gold)
-  { bg: [5, 4, 10], nebula: [80, 60, 20], starCount: 240, dustCount: 80 },
+  { bg: [6, 7, 18], nebula: [44, 52, 120], starCount: 230, dustCount: 30 },
+  { bg: [7, 7, 18], nebula: [56, 50, 112], starCount: 200, dustCount: 38 },
+  { bg: [8, 7, 16], nebula: [74, 56, 92], starCount: 170, dustCount: 46 },
+  { bg: [7, 8, 20], nebula: [52, 66, 128], starCount: 190, dustCount: 34 },
+  { bg: [9, 7, 15], nebula: [92, 62, 60], starCount: 150, dustCount: 44 },
+  { bg: [6, 7, 18], nebula: [48, 56, 124], starCount: 220, dustCount: 50 },
+  { bg: [9, 7, 14], nebula: [96, 56, 50], starCount: 160, dustCount: 36 },
+  { bg: [6, 6, 16], nebula: [70, 58, 96], starCount: 250, dustCount: 70 },
 ];
 
 function lerpColor(a, b, t) {

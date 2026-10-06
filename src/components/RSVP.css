@@ -1,345 +1,177 @@
-/* ═══════════════════════════════════════════════════
-   RSVP.css — Mobile Optimized
-═══════════════════════════════════════════════════ */
-
 .rsvp-section {
-  min-height: auto;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: clamp(1.2rem, 3vh, 2rem) max(1rem, var(--sar)) clamp(1.2rem, 3vh, 2rem) max(1rem, var(--sal));
+  padding: clamp(3rem, 8vh, 5rem) max(1rem, var(--sar)) clamp(2.5rem, 6vh, 4rem) max(1rem, var(--sal));
+}
+
+/* Parchment letter */
+.rsvp-card {
   position: relative;
-  overflow: hidden;
-  background: transparent;
-  user-select: none;
-}
-
-/* Semi-transparent candlelight overlay */
-.rsvp-ambient-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 50%, rgba(30, 20, 12, 0.45) 0%, rgba(8, 6, 4, 0.65) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.rsvp-burst-canvas {
-  position: absolute;
-  inset: 0;
+  z-index: 5;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 25;
-}
-
-/* ─── Main Interactive Parchment Card ────────────── */
-.rsvp-parchment {
-  position: relative;
-  z-index: 10;
-  width: min(92vw, 450px);
-  max-height: calc(100dvh - 2rem);
+  max-width: 680px;
+  padding: clamp(1.4rem, 5vw, 2.6rem);
+  color: var(--ink);
   background:
-    radial-gradient(ellipse at 30% 20%, rgba(244, 232, 193, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse at 70% 80%, rgba(212, 184, 150, 0.08) 0%, transparent 60%),
-    rgba(16, 12, 22, 0.92);
-  border: 1px solid rgba(201, 168, 76, 0.42);
-  border-radius: 6px;
+    radial-gradient(ellipse at 20% 10%, rgba(255, 250, 230, 0.7), transparent 55%),
+    radial-gradient(ellipse at 85% 90%, rgba(150, 110, 50, 0.22), transparent 60%),
+    linear-gradient(160deg, #f3e7c6 0%, #e9d8aa 55%, #dcc590 100%);
+  border-radius: 4px;
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.85),
-    0 0 35px rgba(201, 168, 76, 0.18),
-    inset 0 1px 0 rgba(255, 240, 200, 0.15);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: clamp(1.8rem, 4vh, 2.8rem) clamp(1.2rem, 3.5vw, 2.2rem);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  will-change: transform, box-shadow;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(120, 85, 30, 0.35),
+    inset 0 0 60px rgba(120, 80, 20, 0.25);
 }
 
-/* ─── Ornate Corner Filigrees ────────────────────── */
-.parchment-corner {
+.rsvp-corner {
   position: absolute;
-  width: clamp(16px, 4vw, 22px);
-  height: clamp(16px, 4vw, 22px);
-  border-color: rgba(201, 168, 76, 0.6);
-  border-style: solid;
+  width: 26px;
+  height: 26px;
+  border: 1.5px solid rgba(116, 0, 1, 0.55);
   pointer-events: none;
 }
-.parchment-corner--tl { top: 8px; left: 8px; border-width: 1.5px 0 0 1.5px; }
-.parchment-corner--tr { top: 8px; right: 8px; border-width: 1.5px 1.5px 0 0; }
-.parchment-corner--bl { bottom: 8px; left: 8px; border-width: 0 0 1.5px 1.5px; }
-.parchment-corner--br { bottom: 8px; right: 8px; border-width: 0 1.5px 1.5px 0; }
+.rsvp-corner--tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.rsvp-corner--tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+.rsvp-corner--bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+.rsvp-corner--br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
 
-/* ─── Header ─────────────────────────────────────── */
-.rsvp-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.2rem;
+.rsvp-form { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.rsvp-label {
+  display: block;
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #5a3b12;
+  margin-bottom: 0.35rem;
 }
 
-.rsvp-spark {
-  color: var(--gold);
-  font-size: 0.85rem;
-}
-
-.rsvp-main-title {
-  font-size: clamp(1.25rem, 4.2vw, 1.95rem);
-  color: var(--gold-light);
-  letter-spacing: 0.12em;
-  text-shadow: 0 0 20px rgba(201, 168, 76, 0.4);
-}
-
-.rsvp-gold-rule {
-  margin: 0.3rem 0;
-  width: 100%;
-}
-
-.rsvp-invitation-line {
-  font-size: clamp(0.85rem, 2.6vw, 1.05rem);
-  color: var(--parchment);
-  line-height: 1.5;
-  margin-bottom: clamp(1rem, 2.5vh, 1.6rem);
-  opacity: 0.95;
-}
-
-/* ─── Phase 1: Ritual Choices ────────────────────── */
-.rsvp-ritual-choices {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(0.65rem, 1.8vh, 1rem);
-  width: 100%;
-}
-
-.rsvp-ritual-btn {
-  background: transparent;
-  border: none;
-  border-bottom: 1.5px solid rgba(201, 168, 76, 0.3);
-  border-radius: 0;
-  padding: 0.9rem 0.5rem;
-  min-height: 52px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  transition: all 0.3s ease;
-  outline: none;
-  touch-action: manipulation;
-  width: 100%;
-}
-
-.rsvp-ritual-btn:hover,
-.rsvp-ritual-btn:focus-visible {
-  border-bottom-color: var(--gold-light);
-  border-bottom-width: 2px;
-  transform: translateX(4px);
-}
-
-.ritual-btn-icon {
-  color: var(--gold);
-  font-size: 1rem;
-}
-
-.ritual-btn-label {
-  font-family: var(--font-serif);
-  font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--parchment);
-  letter-spacing: 0.02em;
-  font-weight: 400;
-  font-style: italic;
-}
-
-/* ─── Phase 2: Handwritten Name Form ─────────────── */
-.rsvp-name-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(0.7rem, 2vh, 1.2rem);
-  width: 100%;
-}
-
-.decision-callout {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: clamp(0.78rem, 2.2vw, 0.85rem);
-  color: var(--gold-light);
-  letter-spacing: 0.12em;
-  opacity: 0.85;
-}
-
-.name-prompt-label {
-  font-family: var(--font-handwritten);
-  font-size: clamp(1.1rem, 3.2vw, 1.35rem);
-  color: var(--parchment-mid);
-}
-
-.name-input-wrapper {
+.rsvp-choice { border: 0; }
+.rsvp-choice legend { margin-bottom: 0.5rem; }
+.rsvp-choice-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+.rsvp-choice-btn {
   position: relative;
-  width: 100%;
-}
-
-.name-ink-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1.5px solid rgba(201, 168, 76, 0.45);
-  padding: 0.6rem 0.5rem;
-  font-size: 18px;
-  font-family: var(--font-handwritten);
-  color: var(--parchment);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 54px;
+  padding: 0.6rem 0.8rem;
   text-align: center;
-  outline: none;
-  letter-spacing: 0.02em;
-  transition: border-color 0.3s ease;
-}
-
-.name-ink-input:focus {
-  border-bottom-color: var(--gold-light);
-}
-
-.name-ink-input::placeholder {
-  color: rgba(212, 184, 150, 0.4);
-  font-style: italic;
-  font-size: 0.9rem;
-}
-
-.rsvp-seal-submit-btn {
-  background: linear-gradient(135deg, #a82222 0%, #7a1212 60%, #4a0808 100%);
-  border: 1px solid rgba(243, 221, 144, 0.4);
-  border-radius: 4px;
-  color: #fff2cc;
-  padding: 0.8rem 1.6rem;
-  min-height: 48px;
-  font-size: clamp(0.76rem, 2.2vw, 0.88rem);
-  letter-spacing: 0.18em;
+  font-size: clamp(0.7rem, 2.4vw, 0.82rem);
+  letter-spacing: 0.08em;
+  color: #3a2410;
+  border: 1px solid rgba(90, 59, 18, 0.45);
+  border-radius: 3px;
+  background: rgba(255, 252, 240, 0.45);
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(80, 10, 10, 0.7);
-  transition: all 0.35s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.rsvp-choice-btn input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.rsvp-choice-btn:hover { background: rgba(255, 252, 240, 0.75); }
+.rsvp-choice-btn:focus-within { outline: 2px solid var(--house-crimson); outline-offset: 2px; }
+.rsvp-choice-btn.is-selected {
+  background: var(--house-crimson);
+  border-color: var(--house-crimson);
+  color: #f7e7b4;
+  box-shadow: 0 6px 18px rgba(116, 0, 1, 0.35);
+}
+.rsvp-choice-icon { font-size: 0.9rem; }
+
+.rsvp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 1.1rem; }
+.rsvp-field--full { grid-column: 1 / -1; }
+@media (max-width: 560px) {
+  .rsvp-grid, .rsvp-choice-row { grid-template-columns: 1fr; }
+}
+
+.rsvp-field input,
+.rsvp-field select,
+.rsvp-field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.6rem 0.75rem;
+  font-family: var(--font-serif);
+  font-size: 1.02rem; /* ≥16px avoids iOS zoom-on-focus */
+  color: var(--ink);
+  background: rgba(255, 252, 242, 0.65);
+  border: 1px solid rgba(90, 59, 18, 0.35);
+  border-radius: 3px;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.rsvp-field select {
+  background-image: linear-gradient(45deg, transparent 50%, #5a3b12 50%), linear-gradient(135deg, #5a3b12 50%, transparent 50%);
+  background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 2rem;
+}
+.rsvp-field textarea { resize: vertical; min-height: 84px; }
+.rsvp-field input::placeholder, .rsvp-field textarea::placeholder { color: rgba(58, 36, 16, 0.5); font-style: italic; }
+.rsvp-field input:focus, .rsvp-field select:focus, .rsvp-field textarea:focus {
   outline: none;
-  margin-top: 0.3rem;
-  width: 100%;
-  touch-action: manipulation;
+  background: #fffdf5;
+  border-color: var(--house-crimson);
+  box-shadow: 0 0 0 3px rgba(116, 0, 1, 0.15);
 }
+[aria-invalid='true'] { border-color: #a01818 !important; }
 
-.rsvp-seal-submit-btn:hover,
-.rsvp-seal-submit-btn:focus-visible {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(120, 20, 20, 0.9), 0 0 15px rgba(243, 221, 144, 0.3);
+.rsvp-error { margin-top: 0.3rem; font-size: 0.85rem; color: #8f1111; font-style: italic; }
+.rsvp-error--banner { padding: 0.6rem 0.8rem; background: rgba(143, 17, 17, 0.08); border-left: 3px solid #8f1111; }
+
+.rsvp-submit {
+  align-self: center;
+  min-height: 52px;
+  padding: 0 2.2rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f7e7b4;
+  background: linear-gradient(180deg, #8c0a0b, #5e0001);
+  border: 1px solid #c9a84c;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(94, 0, 1, 0.4), inset 0 1px 0 rgba(255, 220, 150, 0.35);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
+.rsvp-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(94, 0, 1, 0.5); }
+.rsvp-submit:disabled { opacity: 0.7; cursor: progress; }
 
-/* ─── Phase 3 & 4: Wax Seal & Confirmation ───────── */
-.rsvp-sealed-confirmation {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(0.8rem, 2vh, 1.4rem);
-  width: 100%;
-}
+.rsvp-hint { text-align: center; font-size: 0.85rem; color: rgba(58, 36, 16, 0.75); }
+.rsvp-hint a { color: var(--house-crimson); }
 
-.rsvp-wax-stamp {
-  width: clamp(72px, 18vw, 84px);
-  height: clamp(72px, 18vw, 84px);
+/* Confirmation */
+.rsvp-done { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.8rem; padding: 0.6rem 0; }
+.rsvp-seal {
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
-  border: 2px solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.8),
-    0 0 20px rgba(201, 168, 76, 0.35);
-  will-change: transform, opacity;
-}
-
-.stamp-inner-disc {
-  width: 84%;
-  height: 84%;
-  border-radius: 50%;
-  border: 1px dashed rgba(255, 240, 200, 0.4);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.1rem;
+  color: #f6dfa0;
+  background: radial-gradient(circle at 35% 30%, #b01c1c, #6d0606 60%, #3f0202);
+  box-shadow: 0 8px 20px rgba(60, 0, 0, 0.5), inset 0 -4px 10px rgba(0, 0, 0, 0.35), inset 0 3px 6px rgba(255, 140, 140, 0.25);
+  transform: rotate(-8deg);
 }
-
-.stamp-seal-status {
-  font-size: clamp(0.5rem, 1.4vw, 0.6rem);
-  color: #fff9e6;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  white-space: nowrap;
+.rsvp-seal span { font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.9; }
+.rsvp-seal strong { font-size: 1.7rem; letter-spacing: 0.06em; line-height: 1.1; }
+.rsvp-seal--decline { background: radial-gradient(circle at 35% 30%, #3d5a73, #1e3346 60%, #0f1c28); }
+.rsvp-done-title { font-size: clamp(1.1rem, 3.6vw, 1.45rem); color: #4a2a0c; letter-spacing: 0.06em; }
+.rsvp-done-text { font-size: 1.05rem; color: #3a2410; max-width: 460px; }
+.rsvp-link-btn {
+  min-height: 44px;
+  padding: 0 1.2rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--house-crimson);
+  background: none;
+  border: 1px solid rgba(116, 0, 1, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
 }
-
-.stamp-monogram {
-  font-size: clamp(0.95rem, 2.8vw, 1.15rem);
-  color: #f3dd90;
-  letter-spacing: 0.1em;
-}
-
-.stamp-ornament {
-  font-size: 0.5rem;
-  color: #f3dd90;
-  opacity: 0.7;
-}
-
-.confirmation-narrative {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  align-items: center;
-}
-
-.confirm-title {
-  font-size: clamp(1.1rem, 3.4vw, 1.55rem);
-  color: var(--gold-light);
-  letter-spacing: 0.12em;
-}
-
-.confirm-sub {
-  font-size: clamp(0.82rem, 2.4vw, 0.95rem);
-  color: var(--parchment);
-  line-height: 1.45;
-  opacity: 0.9;
-}
-
-.confirm-guest-name {
-  font-size: clamp(1rem, 3vw, 1.35rem);
-  color: var(--gold-pale);
-  letter-spacing: 0.08em;
-  margin: 0.2rem 0;
-}
-
-.confirm-venue-stamp {
-  font-size: clamp(0.68rem, 1.8vw, 0.76rem);
-  color: var(--parchment-dark);
-  opacity: 0.65;
-  letter-spacing: 0.1em;
-}
-
-/* ─── Footer Details ─────────────────────────────── */
-.rsvp-parchment-footer {
-  margin-top: clamp(0.8rem, 2vh, 1.4rem);
-  border-top: 1px solid rgba(201, 168, 76, 0.18);
-  padding-top: 0.6rem;
-  width: 100%;
-}
-
-.footer-venue {
-  font-size: clamp(0.74rem, 2vw, 0.85rem);
-  color: var(--parchment-dark);
-  letter-spacing: 0.08em;
-}
-
-.footer-date {
-  font-size: clamp(0.7rem, 1.8vw, 0.78rem);
-  color: var(--gold);
-  opacity: 0.8;
-}
+.rsvp-link-btn:hover { background: rgba(116, 0, 1, 0.08); }

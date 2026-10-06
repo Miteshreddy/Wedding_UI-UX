@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
+import SectionHeader from './SectionHeader';
 import './MagicalMap.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -79,6 +80,7 @@ export default function MagicalMap() {
   const stopsRef = useRef([]);
   const footprintsRef = useRef([]);
   const destinationFrameRef = useRef(null);
+  const introRef = useRef(null);
   const prefersReduced = useReducedMotion();
   const [FOOTSTEPS] = useState(buildFootsteps);
 
@@ -91,6 +93,7 @@ export default function MagicalMap() {
         if (el) el.style.opacity = '0.85';
       });
       if (destinationFrameRef.current) destinationFrameRef.current.style.opacity = '1';
+      if (introRef.current) introRef.current.style.display = 'none';
       return;
     }
 
@@ -98,6 +101,10 @@ export default function MagicalMap() {
       const isMobile = window.innerWidth < 768;
       const scrollLength = isMobile ? '+=320%' : '+=450%';
 
+      // Title card dissolves before the first footsteps appear
+      if (introRef.current) {
+        gsap.set(introRef.current, { autoAlpha: 1 });
+      }
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -108,6 +115,10 @@ export default function MagicalMap() {
           anticipatePin: 1,
         },
       });
+
+      if (introRef.current) {
+        tl.to(introRef.current, { autoAlpha: 0, duration: 0.04, ease: 'none' }, 0);
+      }
 
       // 2. Animate footsteps sequentially along the route with subtle audio
       let lastStepIndex = -1;
@@ -170,10 +181,19 @@ export default function MagicalMap() {
 
   return (
     <section
+      id="map"
       ref={sectionRef}
       className="map-section scene"
       aria-label="Hand-drawn map of their journey"
     >
+      <div ref={introRef} className="scene-intro scene-intro--map">
+        <SectionHeader
+          kicker="Chapter Two"
+          title="The Marauder’s Map"
+          subtitle="Follow our footsteps across Scotland, from the first hello to the Great Hall."
+        />
+        <span className="scene-intro-cue" aria-hidden="true">↓</span>
+      </div>
       {/* Background ancient parchment texture */}
       <div className="map-parchment-bg" aria-hidden="true" />
 

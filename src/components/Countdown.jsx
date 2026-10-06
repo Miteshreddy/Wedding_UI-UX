@@ -3,6 +3,9 @@ import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { WEDDING } from '../data/weddingData';
 import { sound } from '../utils/audioSystem';
+import { downloadCalendarInvite } from '../utils/calendar';
+import { scrollToSection } from './NavBar';
+import SectionHeader from './SectionHeader';
 import './Countdown.css';
 
 const TARGET_DATE = new Date(WEDDING.date.iso);
@@ -194,10 +197,12 @@ export default function Countdown() {
 
   return (
     <section
+      id="countdown"
       ref={sectionRef}
       className="countdown-section scene"
       aria-label="Countdown to the Wedding Day"
     >
+      <SectionHeader kicker="Until we say “I do”" title="The Final Countdown" />
       {/* Background Starfield Atmosphere */}
       <canvas ref={canvasRef} className="countdown-wisp-canvas fill-parent" aria-hidden="true" />
 
@@ -335,12 +340,21 @@ export default function Countdown() {
           </div>
 
           <p className="countdown-script-tagline t-handwritten">
-            The stars are already counting.
+            {timeLeft.total > 0 ? 'The stars are already counting.' : 'The day has come. Mischief managed.'}
           </p>
 
           <span className="countdown-location-hint t-serif">
             {WEDDING.venue?.name || 'The Grand Hall'} · {WEDDING.venue?.city || 'Edinburgh'}
           </span>
+
+          <div className="countdown-actions">
+            <button type="button" className="countdown-btn t-display" onClick={downloadCalendarInvite}>
+              Add to calendar
+            </button>
+            <button type="button" className="countdown-btn countdown-btn--primary t-display" onClick={() => scrollToSection('rsvp')}>
+              RSVP now
+            </button>
+          </div>
         </footer>
       </div>
     </section>

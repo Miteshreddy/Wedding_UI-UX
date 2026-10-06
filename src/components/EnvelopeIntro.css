@@ -1177,9 +1177,9 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: min(66vmin, 520px);
+  width: min(56vmin, 440px);
   aspect-ratio: 1;
-  transform: translate(-50%, -60%);
+  transform: translate(-50%, -68%);
   color: rgba(214, 180, 96, 0.22);
   filter: drop-shadow(0 0 10px rgba(214, 180, 96, 0.35));
   pointer-events: none;
@@ -1209,4 +1209,22 @@
 }
 @media (max-height: 640px) {
   .ink-hallows svg { width: 44px; height: 44px; }
+}
+
+.env-owlpost {
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.75;
+  margin-bottom: 0.3rem;
+  text-align: center;
+}
+.ink-letter-line {
+  font-size: clamp(0.9rem, 2.6vw, 1.05rem);
+  color: var(--parchment-mid);
+  opacity: 0.85;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0.4rem 0 0.6rem;
 }

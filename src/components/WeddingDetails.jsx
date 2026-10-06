@@ -1,17 +1,19 @@
 import { WEDDING } from '../data/weddingData';
-import DeathlyHallows from './DeathlyHallows';
+import SectionHeader from './SectionHeader';
 import './WeddingDetails.css';
 
 export default function WeddingDetails() {
   const { venue, dressCode, registry } = WEDDING.details;
 
   return (
-    <section className="details-section scene" aria-labelledby="details-title">
-      <header className="details-header">
-        <DeathlyHallows size={34} strokeWidth={2.4} className="details-sigil" />
-        <h2 id="details-title" className="details-title t-display">The Particulars</h2>
-        <p className="details-sub t-ink">Everything a guest needs to know before stepping through the portal</p>
-      </header>
+    <section id="details"
+      className="details-section scene" aria-labelledby="details-title">
+      <SectionHeader
+        id="details-title"
+        kicker="For our guests"
+        title="The Particulars"
+        subtitle="Where to go, what to wear, and how to find our vault"
+      />
 
       <div className="details-grid">
         <article className="details-card">

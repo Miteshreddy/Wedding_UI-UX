@@ -1,366 +1,257 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
+import { WEDDING } from '../data/weddingData';
+import SectionHeader from './SectionHeader';
 import './RSVP.css';
 
-const RESPONSES = {
-  attend: {
-    label: 'I will be there.',
-    icon: '✦',
-    title: 'YOUR PLACE HAS BEEN RESERVED',
-    sub: 'The Grand Hall in Edinburgh awaits your arrival beneath candlelight and starlight.',
-    sealText: 'CONFIRMED',
-    sealColor: '#1e4d2b',
-    sealBorder: '#38a169',
-  },
-  decline: {
-    label: "I'll be there in spirit.",
-    icon: '✧',
-    title: 'YOUR BLESSINGS ARE EMBRACED',
-    sub: 'Though miles may part us on this eve, your love and spirit travel with us.',
-    sealText: 'RECEIVED',
-    sealColor: '#5c1428',
-    sealBorder: '#e11d48',
-  },
-};
+const STORAGE_KEY = 'wedding-rsvp-v1';
+const EMPTY = { name: '', email: '', attending: '', guests: 1, dietary: '', song: '', message: '' };
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function buildMailto(data) {
+  const lines = [
+    `Name: ${data.name}`,
+    `Email: ${data.email}`,
+    `Attending: ${data.attending === 'yes' ? 'Joyfully accepts' : 'Regretfully declines'}`,
+    data.attending === 'yes' ? `Guests: ${data.guests}` : null,
+    data.dietary && `Dietary needs: ${data.dietary}`,
+    data.song && `Song request: ${data.song}`,
+    data.message && `Message: ${data.message}`,
+  ].filter(Boolean);
+  const subject = `RSVP — ${data.name} (${data.attending === 'yes' ? 'attending' : 'not attending'})`;
+  return `mailto:${WEDDING.rsvp.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+}
 
 export default function RSVP() {
-  const sectionRef = useRef(null);
-  const parchmentRef = useRef(null);
-  const stampRef = useRef(null);
-  const canvasRef = useRef(null);
-  const inputRef = useRef(null);
   const prefersReduced = useReducedMotion();
+  const cardRef = useRef(null);
+  const sealRef = useRef(null);
+  const nameRef = useRef(null);
 
-  const [phase, setPhase] = useState('choose'); // 'choose' | 'name' | 'stamping' | 'confirmed'
-  const [choice, setChoice] = useState(null);
-  const [name, setName] = useState('');
+  const [form, setForm] = useState(EMPTY);
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState('form'); // form | sending | done
+  const [sentVia, setSentVia] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
-  // Magical particle burst on stamp landing
-  const triggerMagicalBurst = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas || prefersReduced) return;
-    const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
-    const W = canvas.width / dpr;
-    const H = canvas.height / dpr;
-    const cx = W / 2;
-    const cy = H * 0.56;
-
-    const sparks = Array.from({ length: 75 }, (_, i) => {
-      const angle = (i / 75) * Math.PI * 2 + (Math.random() - 0.5) * 0.5;
-      const speed = 2 + Math.random() * 6;
-      return {
-        x: cx,
-        y: cy,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 0.8,
-        size: 1 + Math.random() * 3.2,
-        opacity: 1,
-        color:
-          Math.random() > 0.4
-            ? 'rgba(243, 221, 144,'
-            : 'rgba(255, 240, 180,',
-      };
-    });
-
-    let rafId;
-    const animate = () => {
-      ctx.clearRect(0, 0, W, H);
-      let isAlive = false;
-
-      sparks.forEach((p) => {
-        if (p.opacity <= 0) return;
-        isAlive = true;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy += 0.1; // gravity
-        p.opacity -= 0.022;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `${p.color} ${Math.max(0, p.opacity).toFixed(2)})`;
-        ctx.shadowColor = 'rgba(201, 168, 76, 0.85)';
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      if (isAlive) {
-        rafId = requestAnimationFrame(animate);
-      } else {
-        ctx.clearRect(0, 0, W, H);
-      }
-    };
-    animate();
-  }, [prefersReduced]);
-
-  const initCanvas = useCallback((canvas) => {
-    canvasRef.current = canvas;
-    if (!canvas) return;
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    const ctx = canvas.getContext('2d');
-    ctx.scale(dpr, dpr);
+  // Returning guest: show their saved answer instead of a blank form
+  useEffect(() => {
+    const saved = loadSaved();
+    if (saved?.data) {
+      setForm({ ...EMPTY, ...saved.data });
+      setSentVia(saved.via || '');
+      setStatus('done');
+    }
   }, []);
 
-  // Handle Decision: Parchment reacts with physical bloom
-  const handleDecision = useCallback(
-    (decisionKey) => {
-      if (phase !== 'choose') return;
-      setChoice(decisionKey);
-      sound.playPaperRustle();
+  const update = (field) => (e) => {
+    const value = field === 'guests' ? Number(e.target.value) : e.target.value;
+    setForm((f) => ({ ...f, [field]: value }));
+    if (errors[field]) setErrors((er) => ({ ...er, [field]: undefined }));
+  };
 
-      if (prefersReduced) {
-        setPhase('name');
-        return;
-      }
+  const validate = () => {
+    const er = {};
+    if (!form.name.trim()) er.name = 'Please tell us your name.';
+    if (!form.email.trim()) er.email = 'We need an email to send updates.';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) er.email = 'That email doesn’t look quite right.';
+    if (!form.attending) er.attending = 'Please choose one.';
+    setErrors(er);
+    return Object.keys(er).length === 0;
+  };
 
-      gsap.to(parchmentRef.current, {
-        scale: 1.03,
-        boxShadow:
-          '0 25px 70px rgba(0, 0, 0, 0.95), 0 0 40px rgba(201, 168, 76, 0.4)',
-        duration: 0.28,
-        ease: 'power2.out',
-        yoyo: true,
-        repeat: 1,
+  const playSeal = useCallback(() => {
+    if (prefersReduced || !sealRef.current) return;
+    gsap.fromTo(
+      sealRef.current,
+      { y: -120, scale: 2, rotation: -30, opacity: 0 },
+      {
+        y: 0, scale: 1, rotation: -8, opacity: 1, duration: 0.45, ease: 'power4.in',
         onComplete: () => {
-          setPhase('name');
-          setTimeout(() => inputRef.current?.focus(), 150);
+          sound.playStampThud();
+          if (cardRef.current) {
+            gsap.fromTo(cardRef.current, { y: 6 }, { y: 0, duration: 0.35, ease: 'elastic.out(1, 0.4)' });
+          }
         },
-      });
-    },
-    [phase, prefersReduced]
-  );
+      }
+    );
+  }, [prefersReduced]);
 
-  // Handle Submit: Wax seal forms, heavy stamp drops, particle burst, confirmation
-  const handleSealSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      if (phase !== 'name') return;
-      setPhase('stamping');
+  useEffect(() => {
+    if (status === 'done' && sentVia !== 'restored') playSeal();
+  }, [status, sentVia, playSeal]);
 
-      if (prefersReduced) {
-        setPhase('confirmed');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitError('');
+    if (!validate()) {
+      sound.playPaperRustle();
+      const first = e.currentTarget.querySelector('[aria-invalid="true"]');
+      first?.focus();
+      return;
+    }
+    const data = { ...form, name: form.name.trim(), email: form.email.trim(), guests: form.attending === 'yes' ? form.guests : 0 };
+    setStatus('sending');
+
+    let via = 'email';
+    if (WEDDING.rsvp.endpoint) {
+      try {
+        const res = await fetch(WEDDING.rsvp.endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ ...data, _subject: `RSVP — ${data.name}` }),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        via = 'online';
+      } catch {
+        setStatus('form');
+        setSubmitError(`Our owl got lost on the way. Please try again, or email us at ${WEDDING.rsvp.email}.`);
         return;
       }
+    } else {
+      window.location.href = buildMailto(data);
+    }
 
-      const tl = gsap.timeline({
-        onComplete: () => setPhase('confirmed'),
-      });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ data, via, at: Date.now() }));
+    } catch {
+      /* storage unavailable: confirmation still shows for this visit */
+    }
+    setForm(data);
+    setSentVia(via);
+    setStatus('done');
+  };
 
-      // 1. Heavy antique stamp drops with realistic gravity
-      if (stampRef.current) {
-        tl.fromTo(
-          stampRef.current,
-          { y: -180, opacity: 0, scale: 2.2, rotation: -35 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            rotation: -6,
-            duration: 0.42,
-            ease: 'power4.in',
-            onComplete: () => {
-              sound.playStampThud();
-              triggerMagicalBurst();
-            },
-          }
-        );
-      }
+  const editResponse = () => {
+    setStatus('form');
+    setSentVia('');
+    requestAnimationFrame(() => nameRef.current?.focus());
+  };
 
-      // 2. Impact screen shake on parchment
-      tl.to(
-        parchmentRef.current,
-        {
-          keyframes: [
-            { y: 8, duration: 0.05 },
-            { y: -5, duration: 0.05 },
-            { y: 3, duration: 0.04 },
-            { y: 0, duration: 0.06 },
-          ],
-        },
-        0.42
-      );
-    },
-    [phase, prefersReduced, triggerMagicalBurst]
-  );
-
-  const activeResponse = choice ? RESPONSES[choice] : null;
+  const attending = form.attending === 'yes';
+  const fieldProps = (name) => ({
+    id: `rsvp-${name}`,
+    name,
+    value: form[name],
+    onChange: update(name),
+    'aria-invalid': errors[name] ? 'true' : undefined,
+    'aria-describedby': errors[name] ? `rsvp-${name}-err` : undefined,
+  });
 
   return (
-    <section
-      ref={sectionRef}
-      className="rsvp-section scene"
-      aria-label="RSVP — Will you join us?"
-    >
-      {/* Sparkle burst canvas */}
-      <canvas
-        ref={initCanvas}
-        className="rsvp-burst-canvas fill-parent"
-        aria-hidden="true"
+    <section id="rsvp" className="rsvp-section scene" aria-labelledby="rsvp-title">
+      <SectionHeader
+        id="rsvp-title"
+        kicker={`Kindly reply by ${WEDDING.rsvp.deadline}`}
+        title="Will You Be There?"
+        subtitle={`${WEDDING.couple.person1} & ${WEDDING.couple.person2} request the honour of your presence`}
       />
 
-      {/* Atmospheric parchment background */}
-      <div className="rsvp-ambient-bg" aria-hidden="true" />
+      <div ref={cardRef} className="rsvp-card">
+        <span className="rsvp-corner rsvp-corner--tl" aria-hidden="true" />
+        <span className="rsvp-corner rsvp-corner--tr" aria-hidden="true" />
+        <span className="rsvp-corner rsvp-corner--bl" aria-hidden="true" />
+        <span className="rsvp-corner rsvp-corner--br" aria-hidden="true" />
 
-      {/* Main Interactive Parchment Card */}
-      <div
-        ref={parchmentRef}
-        className={`rsvp-parchment rsvp-parchment--${phase}`}
-      >
-        {/* Ornate Corner Filigrees */}
-        <div
-          className="parchment-corner parchment-corner--tl"
-          aria-hidden="true"
-        />
-        <div
-          className="parchment-corner parchment-corner--tr"
-          aria-hidden="true"
-        />
-        <div
-          className="parchment-corner parchment-corner--bl"
-          aria-hidden="true"
-        />
-        <div
-          className="parchment-corner parchment-corner--br"
-          aria-hidden="true"
-        />
+        {status !== 'done' ? (
+          <form className="rsvp-form" onSubmit={handleSubmit} noValidate>
+            <fieldset className="rsvp-choice" aria-describedby={errors.attending ? 'rsvp-attending-err' : undefined}>
+              <legend className="rsvp-label t-display">Your reply</legend>
+              <div className="rsvp-choice-row">
+                {[
+                  { v: 'yes', t: 'Joyfully accepts', i: '✦' },
+                  { v: 'no', t: 'Regretfully declines', i: '✧' },
+                ].map((o) => (
+                  <label key={o.v} className={`rsvp-choice-btn ${form.attending === o.v ? 'is-selected' : ''}`}>
+                    <input type="radio" name="attending" value={o.v} checked={form.attending === o.v} onChange={update('attending')} aria-invalid={errors.attending ? 'true' : undefined} />
+                    <span className="rsvp-choice-icon" aria-hidden="true">{o.i}</span>
+                    <span className="t-display">{o.t}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.attending && <p id="rsvp-attending-err" className="rsvp-error">{errors.attending}</p>}
+            </fieldset>
 
-        {/* Parchment Header */}
-        <div className="rsvp-header">
-          <span className="rsvp-spark" aria-hidden="true">✦</span>
-          <h2 className="rsvp-main-title t-display">Will you be there?</h2>
-          <span className="rsvp-spark" aria-hidden="true">✦</span>
-        </div>
+            <div className="rsvp-grid">
+              <div className="rsvp-field">
+                <label className="rsvp-label t-display" htmlFor="rsvp-name">Full name</label>
+                <input ref={nameRef} type="text" autoComplete="name" placeholder="As it should appear on your place card" {...fieldProps('name')} />
+                {errors.name && <p id="rsvp-name-err" className="rsvp-error">{errors.name}</p>}
+              </div>
+              <div className="rsvp-field">
+                <label className="rsvp-label t-display" htmlFor="rsvp-email">Email</label>
+                <input type="email" autoComplete="email" inputMode="email" placeholder="For updates by owl (or email)" {...fieldProps('email')} />
+                {errors.email && <p id="rsvp-email-err" className="rsvp-error">{errors.email}</p>}
+              </div>
 
-        <div className="rsvp-gold-rule">
-          <span className="gold-rule" />
-        </div>
+              {attending && (
+                <>
+                  <div className="rsvp-field">
+                    <label className="rsvp-label t-display" htmlFor="rsvp-guests">Number of guests</label>
+                    <select {...fieldProps('guests')}>
+                      {Array.from({ length: WEDDING.rsvp.maxGuests }, (_, i) => i + 1).map((n) => (
+                        <option key={n} value={n}>{n === 1 ? 'Just me' : `${n} guests (including me)`}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="rsvp-field">
+                    <label className="rsvp-label t-display" htmlFor="rsvp-dietary">Dietary needs</label>
+                    <input type="text" placeholder="Vegetarian, allergies… (optional)" {...fieldProps('dietary')} />
+                  </div>
+                  <div className="rsvp-field rsvp-field--full">
+                    <label className="rsvp-label t-display" htmlFor="rsvp-song">A song to get you dancing</label>
+                    <input type="text" placeholder="Optional" {...fieldProps('song')} />
+                  </div>
+                </>
+              )}
 
-        <p className="rsvp-invitation-line t-ink">
-          Evelyn Ashcroft & Adrian Blackwood
-          <br />
-          request the honour of your presence
-        </p>
-
-        {/* Phase 1: Ritual Choice (Attend or Decline) */}
-        {phase === 'choose' && (
-          <div
-            className="rsvp-ritual-choices"
-            role="group"
-            aria-label="RSVP Ritual Choices"
-          >
-            {Object.entries(RESPONSES).map(([key, res]) => (
-              <button
-                key={key}
-                className={`rsvp-ritual-btn rsvp-ritual-btn--${key}`}
-                onClick={() => handleDecision(key)}
-                aria-label={res.label}
-              >
-                <span className="ritual-btn-icon" aria-hidden="true">
-                  {res.icon}
-                </span>
-                <span className="ritual-btn-label t-display">{res.label}</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Phase 2: Handwritten Name Input */}
-        {phase === 'name' && (
-          <form
-            className="rsvp-name-form"
-            onSubmit={handleSealSubmit}
-            aria-label="Enter your name to seal RSVP"
-          >
-            <div className="decision-callout t-ink">
-              <span className="decision-icon">{activeResponse?.icon}</span>
-              <span className="decision-label">{activeResponse?.label}</span>
+              <div className="rsvp-field rsvp-field--full">
+                <label className="rsvp-label t-display" htmlFor="rsvp-message">A note for the couple</label>
+                <textarea rows={3} placeholder="Optional" {...fieldProps('message')} />
+              </div>
             </div>
 
-            <label
-              className="name-prompt-label t-handwritten"
-              htmlFor="guest-name-input"
-            >
-              Sign your name below…
-            </label>
+            {submitError && <p className="rsvp-error rsvp-error--banner" role="alert">{submitError}</p>}
 
-            <div className="name-input-wrapper">
-              <input
-                ref={inputRef}
-                id="guest-name-input"
-                type="text"
-                className="name-ink-input t-ink"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Write your name here"
-                autoComplete="name"
-                required
-                aria-label="Your full name"
-                inputMode="text"
-                enterKeyHint="send"
-              />
-              <div className="ink-underline" aria-hidden="true" />
-            </div>
-
-            <button
-              type="submit"
-              className="rsvp-seal-submit-btn t-display"
-              aria-label="Seal and Dispatch RSVP"
-            >
-              ✦ SEAL & DISPATCH ✦
+            <button type="submit" className="rsvp-submit t-display" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Sending your owl…' : 'Seal & send reply'}
             </button>
-          </form>
-        )}
-
-        {/* Phase 3 & 4: Stamping Impact & Confirmation */}
-        {(phase === 'stamping' || phase === 'confirmed') && (
-          <div className="rsvp-sealed-confirmation" aria-live="assertive">
-            {/* The Stamped Wax Monogram Seal */}
-            <div
-              ref={stampRef}
-              className="rsvp-wax-stamp"
-              style={{
-                borderColor: activeResponse?.sealBorder,
-                background: activeResponse?.sealColor,
-                opacity: phase === 'confirmed' ? 1 : 0,
-              }}
-            >
-              <div className="stamp-inner-disc">
-                <span className="stamp-seal-status t-display">
-                  {activeResponse?.sealText}
-                </span>
-                <span className="stamp-monogram t-serif">EA</span>
-                <span className="stamp-ornament">✦</span>
-              </div>
-            </div>
-
-            {phase === 'confirmed' && (
-              <div className="confirmation-narrative">
-                <h3 className="confirm-title t-display">
-                  {activeResponse?.title}
-                </h3>
-                <p className="confirm-sub t-ink">{activeResponse?.sub}</p>
-                {name && (
-                  <p className="confirm-guest-name t-ink">— {name} —</p>
-                )}
-                <p className="confirm-venue-stamp t-serif">
-                  The Grand Hall · Edinburgh · 31.10.2026
-                </p>
-              </div>
+            {!WEDDING.rsvp.endpoint && (
+              <p className="rsvp-hint t-ink">This opens your email app with your reply ready to send.</p>
             )}
-          </div>
-        )}
-
-        {/* Footer Details */}
-        {phase === 'choose' && (
-          <div className="rsvp-parchment-footer">
-            <p className="footer-venue t-serif">The Grand Hall, Edinburgh</p>
-            <p className="footer-date t-ink">31 October 2026</p>
+          </form>
+        ) : (
+          <div className="rsvp-done" aria-live="polite">
+            <div ref={sealRef} className={`rsvp-seal ${attending ? '' : 'rsvp-seal--decline'}`} aria-hidden="true">
+              <span className="t-display">{attending ? 'Accepted' : 'Received'}</span>
+              <strong className="t-display">{WEDDING.couple.person1[0]}{WEDDING.couple.person2[0]}</strong>
+            </div>
+            <h3 className="rsvp-done-title t-display">
+              {attending ? 'Your place in the Great Hall is saved' : 'You will be missed'}
+            </h3>
+            <p className="rsvp-done-text t-ink">
+              {attending
+                ? `Thank you, ${form.name}. We can’t wait to celebrate with ${form.guests > 1 ? `your party of ${form.guests}` : 'you'} on ${WEDDING.date.display}.`
+                : `Thank you for letting us know, ${form.name}. We’ll raise a glass to you.`}
+            </p>
+            {sentVia === 'email' && (
+              <p className="rsvp-hint t-ink">
+                Didn’t see an email draft open? <a href={buildMailto(form)}>Send it here</a> or write to {WEDDING.rsvp.email}.
+              </p>
+            )}
+            <button type="button" className="rsvp-link-btn t-display" onClick={editResponse}>
+              Change my reply
+            </button>
           </div>
         )}
       </div>

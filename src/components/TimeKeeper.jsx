@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
+import SectionHeader from './SectionHeader';
 import './TimeKeeper.css';
 
 // 4 Signature Event Times & Atmospheric Themes
@@ -301,6 +302,7 @@ export default function TimeKeeper() {
 
   return (
     <section
+      id="schedule"
       ref={sectionRef}
       className={`timekeeper-section scene theme--${selectedEvent.theme}`}
       aria-label="Interactive Magical Clock — Order of Events"
@@ -316,15 +318,11 @@ export default function TimeKeeper() {
       <div className="timekeeper-ambient-pool" aria-hidden="true" />
 
       {/* Heading */}
-      <div className="timekeeper-header">
-        <h2 className="timekeeper-main-title t-display">
-          The Order of the Day
-        </h2>
-        <span className="gold-rule" />
-        <p className="timekeeper-sub-title t-ink">
-          Rotate the golden hand to reveal the unfolding celebration
-        </p>
-      </div>
+      <SectionHeader
+        kicker="Saturday · 31 October 2026"
+        title="The Order of the Day"
+        subtitle="Turn the golden hand, or tap a time, to see how the evening unfolds"
+      />
 
       {/* Clock & Event Information Stage */}
       <div className="timekeeper-stage">

@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
 import CouplePhoto from './CouplePhoto';
+import SectionHeader from './SectionHeader';
 import './MemoryGallery.css';
 
 // 6 Richly crafted memories as detailed SVG/CSS art scenes
@@ -677,8 +678,12 @@ export default function MemoryGallery() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
-      if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      // Only respond while the Pensieve is on screen and focus isn't in a form field
+      const box = sectionRef.current?.getBoundingClientRect();
+      if (!box || box.bottom < window.innerHeight * 0.3 || box.top > window.innerHeight * 0.7) return;
+      if (e.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+      goTo(currentIndex + (e.key === 'ArrowRight' ? 1 : -1));
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -686,6 +691,7 @@ export default function MemoryGallery() {
 
   return (
     <section
+      id="memories"
       ref={sectionRef}
       className="gallery-section scene"
       aria-label="Liquid Memory Gallery — Photographic Chronicle"
@@ -721,12 +727,11 @@ export default function MemoryGallery() {
       </svg>
 
       {/* Simple Editorial Section Header */}
-      <header className="gallery-editorial-header" role="banner">
-        <p className="gallery-edition t-ink">2021 – 2026</p>
-        <h2 className="gallery-title t-display">The Pensieve</h2>
-        <p className="gallery-subtitle t-ink">Six memories, siphoned into the silver pool</p>
-        <span className="gold-rule" />
-      </header>
+      <SectionHeader
+        kicker="2021 – 2026"
+        title="The Pensieve"
+        subtitle="Six memories, drawn from our minds into the silver pool. Stir the water to revisit each one."
+      />
 
       {/* The Pensieve: a stone basin holding a glowing pool of memories */}
       <div className="pensieve-basin">

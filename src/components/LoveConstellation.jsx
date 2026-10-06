@@ -5,6 +5,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
 import DeathlyHallows from './DeathlyHallows';
 import CouplePhoto from './CouplePhoto';
+import SectionHeader from './SectionHeader';
 import './LoveConstellation.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -67,6 +68,7 @@ export default function LoveConstellation() {
   const canvasRef = useRef(null);
   const storyCardsRef = useRef([]);
   const photoRef = useRef(null);
+  const introRef = useRef(null);
   const photoTextRef = useRef(null);
   const prefersReduced = useReducedMotion();
 
@@ -492,6 +494,12 @@ export default function LoveConstellation() {
         anticipatePin: 1,
         onUpdate: (self) => {
           state.progress = self.progress;
+          // Title card fades as the two stars begin to move
+          if (introRef.current) {
+            const o = Math.max(0, 1 - self.progress / 0.07);
+            introRef.current.style.opacity = o;
+            introRef.current.style.visibility = o === 0 ? 'hidden' : 'visible';
+          }
         },
       });
 
@@ -568,10 +576,19 @@ export default function LoveConstellation() {
 
   return (
     <section
+      id="story"
       ref={sectionRef}
       className="constellation-section scene"
       aria-label="Their love story constellation"
     >
+      <div ref={introRef} className="scene-intro">
+        <SectionHeader
+          kicker="Chapter One"
+          title="Written in the Stars"
+          subtitle="Two stars, two paths, one sky. Scroll to watch them find each other."
+        />
+        <span className="scene-intro-cue" aria-hidden="true">↓</span>
+      </div>
       <canvas
         ref={canvasRef}
         className="constellation-canvas fill-parent"

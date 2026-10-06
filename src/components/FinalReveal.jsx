@@ -3,6 +3,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
+import { NAV_ITEMS, scrollToSection } from './NavBar';
+import { downloadCalendarInvite } from '../utils/calendar';
+import { WEDDING } from '../data/weddingData';
 import './FinalReveal.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -242,6 +245,7 @@ export default function FinalReveal() {
 
   return (
     <section
+      id="finale"
       ref={sectionRef}
       className="final-section scene"
       aria-label="Save the date — final reveal"
@@ -323,6 +327,28 @@ export default function FinalReveal() {
 
       {/* Cinematic Vignette */}
       <div className="final-vignette" aria-hidden="true" />
+
+      <footer className="site-footer">
+        <div className="footer-actions">
+          <button type="button" className="footer-btn footer-btn--primary t-display" onClick={() => scrollToSection('rsvp')}>
+            Reply to the invitation
+          </button>
+          <button type="button" className="footer-btn t-display" onClick={downloadCalendarInvite}>
+            Add to calendar
+          </button>
+        </div>
+        <nav className="footer-links" aria-label="Footer">
+          {NAV_ITEMS.map((n) => (
+            <a key={n.id} href={`#${n.id}`} onClick={(e) => { e.preventDefault(); scrollToSection(n.id); }}>
+              {n.label}
+            </a>
+          ))}
+        </nav>
+        <p className="footer-note t-ink">
+          Questions? Write to <a href={`mailto:${WEDDING.rsvp.email}`}>{WEDDING.rsvp.email}</a>
+        </p>
+        <p className="footer-mischief t-display">Mischief managed.</p>
+      </footer>
     </section>
   );
 }

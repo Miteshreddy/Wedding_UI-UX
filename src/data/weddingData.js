@@ -50,6 +50,14 @@ export const WEDDING = {
     { time: '8:00 PM', hour: 20, label: 'Dinner', description: 'A feast worthy of the occasion.', icon: '◈' },
     { time: '11:00 PM', hour: 23, label: 'Dancing', description: 'Let the night carry you away.', icon: '◉' },
   ],
+  rsvp: {
+    deadline: '1 September 2026',
+    // Paste a form-service URL (e.g. https://formspree.io/f/xxxx) to collect
+    // responses online. Left empty, the form opens a pre-filled email instead.
+    endpoint: '',
+    email: 'rsvp@evelynandadrian.com',
+    maxGuests: 4,
+  },
   details: {
     venue: {
       name: 'The Grand Hall',

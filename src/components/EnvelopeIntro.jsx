@@ -796,6 +796,7 @@ export default function EnvelopeIntro({ onComplete }) {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
+          <p className="env-owlpost t-display">By Owl Post</p>
           <p className="env-tagline t-ink">{subText}</p>
           <button
             type="button"
@@ -855,6 +856,12 @@ export default function EnvelopeIntro({ onComplete }) {
           <div className="ink-script-line ink-ornament-rule">
             <span className="gold-rule" />
           </div>
+
+          <p className="ink-script-line ink-letter-line t-ink">
+            We are pleased to inform you that you have been
+            <br />
+            accepted as a guest at our wedding.
+          </p>
 
           {/* Date */}
           <p className="ink-script-line ink-date t-display">

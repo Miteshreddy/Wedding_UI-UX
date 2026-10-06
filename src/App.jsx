@@ -4,6 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import NoiseOverlay from './components/NoiseOverlay';
 import WorldCanvas from './components/WorldCanvas';
+import FloatingCandles from './components/FloatingCandles';
+import NavBar from './components/NavBar';
 import EnvelopeIntro from './components/EnvelopeIntro';
 import LoveConstellation from './components/LoveConstellation';
 import MagicalMap from './components/MagicalMap';
@@ -120,6 +122,9 @@ export default function App() {
 
       {/* Persistent world canvas backdrop */}
       <WorldCanvas scrollProgress={scrollProgress} />
+      <FloatingCandles />
+
+      {envelopeOpened && <NavBar />}
 
 {/* Continuous Master Journey */}
       <main
