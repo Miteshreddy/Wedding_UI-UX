@@ -189,38 +189,74 @@
   .map-lead-newspaper { width: min(90vw, 300px); left: auto; right: clamp(2rem, 8vw, 12%); transform: none; bottom: 10%; }
 }
 
-/* ─── Phones & sideways phones: a normal, flowing section ─── */
-.map-section.map-section--compact {
-  height: auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: clamp(3rem, 8vh, 4.5rem) max(1rem, var(--sar)) clamp(2rem, 5vh, 3rem) max(1rem, var(--sal));
+/* ─── Phones: map on top, one annotation card in a slot underneath ─── */
+@media (max-width: 767px) {
+  .map-section {
+    align-items: flex-start;
+    padding-top: calc(var(--sat) + 64px);
+  }
+  .map-svg {
+    /* match the map's own 520x640 shape so there is no letterbox gap */
+    height: min(58svh, 560px, 115vw);
+  }
+  .map-card,
+  .map-card--0,
+  .map-card--1,
+  .map-card--2,
+  .map-card--3 {
+    /* sit directly under the map instead of at the bottom of the screen */
+    top: calc(var(--sat) + 64px + min(58svh, 560px, 115vw) + 14px);
+    bottom: auto;
+    width: min(92vw, 380px);
+    text-align: left;
+  }
+  .map-lead-newspaper {
+    bottom: calc(var(--sab) + clamp(1.6rem, 7svh, 3rem));
+  }
 }
-.map-section--compact .map-parchment-bg { display: none; }
-.map-section--compact .map-svg {
-  width: 100%;
-  max-width: 440px;
-  height: auto;
-  aspect-ratio: 520 / 640;
-  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.7));
+@media (max-width: 767px) and (max-height: 680px) {
+  .map-svg { height: min(52svh, 480px, 115vw); }
+  .map-card, .map-card--0, .map-card--1, .map-card--2, .map-card--3 {
+    top: calc(var(--sat) + 64px + min(52svh, 480px, 115vw) + 10px);
+  }
 }
-.map-section--compact .map-annotations {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.75rem;
-  width: 100%;
-  max-width: 440px;
-  margin-top: 1.25rem;
-  pointer-events: auto;
+
+/* ─── Phones in landscape: map left, one card slot on the right ─── */
+@media (min-width: 768px) and (max-height: 500px) {
+  .map-section { justify-content: flex-start; padding-left: max(4vw, var(--sal)); padding-top: calc(var(--sat) + 52px); align-items: center; }
+  .map-svg { height: calc(100svh - 64px); width: auto; max-width: 48vw; }
+  .map-card,
+  .map-card--0, .map-card--1, .map-card--2, .map-card--3,
+  .map-card--rotate-pos, .map-card--rotate-neg {
+    left: auto;
+    right: max(4vw, var(--sar));
+    top: 50%;
+    bottom: auto;
+    width: min(40vw, 320px);
+    transform: translateY(-30%);
+    text-align: left;
+  }
+  .map-lead-newspaper { left: auto; right: max(4vw, var(--sar)); bottom: 1rem; transform: none; width: min(40vw, 320px); }
 }
-.map-section--compact .map-card {
-  position: static;
-  width: 100%;
-  transform: none;
-  text-align: left;
+
+@media (max-width: 767px), (max-height: 500px) {
+  .map-lead-newspaper { display: none; }
 }
-.map-section--compact .map-lead-newspaper { display: none; }
+
+/* Phones: centre the map + its card as one block instead of leaving the
+   bottom of the screen empty */
+@media (max-width: 767px) {
+  /* .scene adds specificity: the global short-phone .scene padding rule loads later */
+  .map-section.scene {
+    --map-h: min(58svh, 560px, 115vw);
+    --map-top: max(calc(var(--sat) + 64px), calc((100svh - var(--map-h) - 110px) / 2 + 24px));
+    padding-top: var(--map-top);
+  }
+  .map-svg { height: var(--map-h); }
+  .map-card, .map-card--0, .map-card--1, .map-card--2, .map-card--3 {
+    top: calc(var(--map-top) + var(--map-h) + 14px);
+  }
+}
+@media (max-width: 767px) and (max-height: 680px) {
+  .map-section.scene { --map-h: min(52svh, 480px, 115vw); }
+}

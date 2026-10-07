@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { useCompactLayout } from '../hooks/useCompactLayout';
 import { sound } from '../utils/audioSystem';
 import SectionHeader from './SectionHeader';
 import './MagicalMap.css';
@@ -84,7 +83,6 @@ export default function MagicalMap() {
   const introRef = useRef(null);
   const prefersReduced = useReducedMotion();
   const [FOOTSTEPS] = useState(buildFootsteps);
-  const compact = useCompactLayout();
 
   useEffect(() => {
     if (prefersReduced) {
@@ -100,32 +98,24 @@ export default function MagicalMap() {
     }
 
     const ctx = gsap.context(() => {
-      // Phones: a normal section. The walk plays by itself (about 6s) once the
-      // map is on screen, and the cards sit in a list below it.
-      // Desktop: the scroll-driven, pinned scene.
-      const tl = compact
-        ? gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current.querySelector('.map-svg'),
-              start: 'top 70%',
-              toggleActions: 'play none none none',
-            },
-          })
-        : gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top top',
-              end: '+=450%',
-              scrub: 1.2,
-              pin: true,
-              anticipatePin: 1,
-            },
-          });
-      if (compact) tl.timeScale(0.18);
+      // Narrow phones and short landscape phones both use the single-card layout
+      const isMobile = window.innerWidth < 768 || window.innerHeight < 500;
+      const scrollLength = isMobile ? '+=320%' : '+=450%';
 
+      // Title card dissolves before the first footsteps appear
       if (introRef.current) {
         gsap.set(introRef.current, { autoAlpha: 1 });
       }
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: scrollLength,
+          scrub: 1.2,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
 
       if (introRef.current) {
         tl.to(introRef.current, { autoAlpha: 0, duration: 0.04, ease: 'none' }, 0);
@@ -157,7 +147,9 @@ export default function MagicalMap() {
         tl.to(fp, { opacity: 0.45, duration: 0.06, ease: 'none' }, step.t + 0.04);
       });
 
-      // 3. Reveal milestone markers with handwritten annotations
+      // 3. Reveal milestone markers with handwritten annotations.
+      // Phones have no room beside the map, so cards share one slot below it
+      // and each one hands over to the next instead of stacking on the map.
       MAP_STOPS.forEach((stop, i) => {
         const el = stopsRef.current[i];
         if (!el) return;
@@ -167,10 +159,14 @@ export default function MagicalMap() {
           { opacity: 1, scale: 1, y: 0, duration: 0.1, ease: 'back.out(1.8)' },
           stop.t
         );
+        const prev = stopsRef.current[i - 1];
+        if (isMobile && prev) {
+          tl.to(prev, { opacity: 0, y: -12, duration: 0.06, ease: 'power1.in' }, stop.t - 0.03);
+        }
       });
 
       // 4. MAP -> MEMORY TRANSITION: Final destination expands into ornate photo frame
-      if (destinationFrameRef.current && !compact) {
+      if (destinationFrameRef.current && !isMobile) {
         tl.fromTo(
           destinationFrameRef.current,
           { opacity: 0, scale: 0.7, filter: 'blur(8px)' },
@@ -188,31 +184,23 @@ export default function MagicalMap() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [prefersReduced, FOOTSTEPS, compact]);
+  }, [prefersReduced, FOOTSTEPS]);
 
   return (
     <section
       id="map"
       ref={sectionRef}
-      className={`map-section scene ${compact ? 'map-section--compact' : ''}`}
+      className="map-section scene"
       aria-label="Hand-drawn map of their journey"
     >
-      {compact ? (
+      <div ref={introRef} className="scene-intro scene-intro--map">
         <SectionHeader
           kicker="Chapter Two"
           title="The Marauder’s Map"
           subtitle="Follow our footsteps across Scotland, from the first hello to the Great Hall."
         />
-      ) : (
-        <div ref={introRef} className="scene-intro scene-intro--map">
-          <SectionHeader
-            kicker="Chapter Two"
-            title="The Marauder’s Map"
-            subtitle="Follow our footsteps across Scotland, from the first hello to the Great Hall."
-          />
-          <span className="scene-intro-cue" aria-hidden="true">↓</span>
-        </div>
-      )}
+        <span className="scene-intro-cue" aria-hidden="true">↓</span>
+      </div>
       {/* Background ancient parchment texture */}
       <div className="map-parchment-bg" aria-hidden="true" />
 
