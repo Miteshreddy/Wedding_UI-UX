@@ -401,12 +401,12 @@ export default function EnvelopeIntro({ onComplete }) {
     // STEP 9–11: PARCHMENT LETTER RISES FROM POCKET (1.3s – 2.3s)
     masterTl.fromTo(
       risingLetterRef.current,
-      { y: 0, opacity: 1, scale: 1 },
-      { y: -160, opacity: 1, scale: 1.04, duration: 1.0, ease: 'power2.out' },
+      { yPercent: 0, opacity: 1 },
+      // Slides halfway out of the pocket and stays behind the front flaps, so it
+      // reads as a letter coming out of the envelope (not a card pasted on top)
+      { yPercent: -58, opacity: 1, duration: 1.0, ease: 'power2.out' },
       1.3
     );
-
-    masterTl.set(risingLetterRef.current, { zIndex: 35 }, 1.7);
 
     // STEP 12–14: ENVELOPE RECEDES & PARCHMENT BLOSSOMS (2.2s – 3.3s)
     masterTl.to(

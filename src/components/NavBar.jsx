@@ -30,10 +30,13 @@ export default function NavBar() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const [onInvite, setOnInvite] = useState(true);
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
+      // Keep the invitation screen clear: the bar slides in once you scroll on
+      setOnInvite(window.scrollY < window.innerHeight * 0.55);
       const probe = window.innerHeight * 0.4;
       let current = '';
       for (const { id } of NAV_ITEMS) {
@@ -81,7 +84,7 @@ export default function NavBar() {
   const toggleSound = () => setMuted(sound.toggleMute());
 
   return (
-    <nav className={`site-nav ${scrolled ? 'site-nav--solid' : ''} ${open ? 'site-nav--open' : ''}`} aria-label="Main">
+    <nav className={`site-nav ${scrolled ? 'site-nav--solid' : ''} ${open ? 'site-nav--open' : ''} ${onInvite && !open ? 'site-nav--hidden' : ''}`} aria-label="Main">
       <button className="nav-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Back to top">
         <DeathlyHallows size={22} strokeWidth={4} />
         <span className="nav-monogram t-display">

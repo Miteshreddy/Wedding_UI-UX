@@ -1242,3 +1242,30 @@
    screen size; they otherwise linger as a red smudge while scrolling away. */
 .envelope-scene--opened .env-candle-glow,
 .envelope-scene--opened .env-hallows { display: none; }
+
+/* ─── Letter sits inside the envelope ─── */
+.envelope-rising-letter {
+  width: 84%;
+  height: 82%;
+  top: 9%;
+}
+
+/* ─── Invitation typography: clean classical capitals, room to breathe ─── */
+.ink-hallows { margin-bottom: 1.1rem; }
+.ink-pretitle {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+.ink-names-stack,
+.ink-name-first,
+.ink-name-second {
+  font-family: 'Cinzel', serif;
+  font-weight: 400;
+}
+.ink-names-cross-center {
+  font-family: var(--font-handwritten);
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  color: var(--gold);
+  margin: 0.15rem 0 0.25rem;
+}
