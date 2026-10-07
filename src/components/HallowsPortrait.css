@@ -1,0 +1,27 @@
+.hallows-portrait {
+  position: relative;
+  width: var(--hp-size, 150px);
+  aspect-ratio: 1;
+}
+.hp-symbol {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--gold-light);
+  filter: drop-shadow(0 0 6px rgba(240, 213, 136, 0.45));
+  pointer-events: none;
+}
+/* Photo fills the Hallows circle: centre (50%, 58.7%), radius 25.3% */
+.hp-photo {
+  position: absolute;
+  left: 25.6%;
+  top: 34.3%;
+  width: 48.8%;
+  height: 48.8%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 30%;
+  box-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
+}
+.hp-photo--empty { display: block; background: radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.25), rgba(12, 9, 16, 0.95)); }

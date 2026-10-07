@@ -735,18 +735,73 @@ export default function MemoryGallery() {
 
       {/* The Pensieve: a stone basin holding a glowing pool of memories */}
       <div className="pensieve-basin">
-        <div className="pensieve-runes" aria-hidden="true">
-          <svg viewBox="0 0 200 200">
-            <defs>
-              <path id="runeCircle" d="M100 100 m-92 0 a92 92 0 1 1 184 0 a92 92 0 1 1 -184 0" />
-            </defs>
-            <text>
-              <textPath href="#runeCircle" startOffset="0">
-                ✦ ᚱᛖᛗᛖᛗᛒᛖᚱ ✦ THE PENSIEVE ✦ ᛗᛖᛗᛟᚱᛁᛖᛋ ✦ 2021 — 2026 ✦ ᛚᛟᚢᛖ ✦ EVELYN &amp; ADRIAN ✦
-              </textPath>
-            </text>
-          </svg>
-        </div>
+        {/* Carved stone basin: rough lit stone, worn rune engraving and cracks.
+            A mask cuts the pool out so the moving liquid shows to the very edge. */}
+        <svg className="pensieve-stone" viewBox="0 0 400 400" aria-hidden="true">
+          <defs>
+            <filter id="pvStone" x="0" y="0" width="100%" height="100%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" seed="7" result="n" />
+              <feDiffuseLighting in="n" surfaceScale="2.2" lightingColor="#9a958a" result="lit">
+                <feDistantLight azimuth="225" elevation="48" />
+              </feDiffuseLighting>
+              <feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1="1.15" k2="0" k3="0" k4="0" />
+            </filter>
+            <filter id="pvWorn"><feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="2" seed="3" /><feDisplacementMap in="SourceGraphic" scale="1.6" /></filter>
+            <radialGradient id="pvLip" cx="50%" cy="50%" r="50%">
+              <stop offset="70%" stopColor="#000" stopOpacity="0" />
+              <stop offset="72%" stopColor="#000" stopOpacity="0.75" />
+              <stop offset="77%" stopColor="#5a574f" stopOpacity="0.35" />
+              <stop offset="86%" stopColor="#000" stopOpacity="0" />
+              <stop offset="88%" stopColor="#000" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#000" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="pvVignette" cx="50%" cy="50%" r="72%">
+              <stop offset="55%" stopColor="#000" stopOpacity="0" />
+              <stop offset="100%" stopColor="#000" stopOpacity="0.7" />
+            </radialGradient>
+            <mask id="pvHole">
+              <rect width="400" height="400" fill="#fff" />
+              <circle cx="200" cy="200" r="144" fill="#000" />
+            </mask>
+            <path id="pvRuneRing" d="M200 200 m-157 0 a157 157 0 1 1 314 0 a157 157 0 1 1 -314 0" />
+          </defs>
+          <g mask="url(#pvHole)">
+            <rect width="400" height="400" rx="10" fill="#4a4944" filter="url(#pvStone)" />
+            <rect width="400" height="400" rx="10" fill="url(#pvVignette)" />
+            <circle cx="200" cy="200" r="200" fill="url(#pvLip)" />
+            {/* engraved grooves */}
+            <circle cx="200" cy="200" r="147" fill="none" stroke="#0e0e0c" strokeWidth="2.5" />
+            <circle cx="200" cy="200" r="169" fill="none" stroke="#0e0e0c" strokeWidth="1.6" opacity="0.8" />
+            <circle cx="200" cy="200" r="170.2" fill="none" stroke="#8d887c" strokeWidth="0.6" opacity="0.35" />
+            {/* worn rune engraving: dark cut with a faint lit edge */}
+            <g filter="url(#pvWorn)" fontFamily="'Cinzel', serif" fontSize="12" letterSpacing="3.2">
+              <text fill="#9d968a" opacity="0.28" transform="translate(0.6 0.8)">
+                <textPath href="#pvRuneRing">ᛗᛖᛗᛟᚱᛁᚨ ✦ EVELYN &amp; ADRIAN ✦ ᚨᛗᛟᚱ ✦ MMXXI · MMXXVI ✦ ᛚᚢᛗᛟᛊ ✦ WHAT IS REMEMBERED LIVES ✦</textPath>
+              </text>
+              <text fill="#0b0b09" opacity="0.85">
+                <textPath href="#pvRuneRing">ᛗᛖᛗᛟᚱᛁᚨ ✦ EVELYN &amp; ADRIAN ✦ ᚨᛗᛟᚱ ✦ MMXXI · MMXXVI ✦ ᛚᚢᛗᛟᛊ ✦ WHAT IS REMEMBERED LIVES ✦</textPath>
+              </text>
+            </g>
+            {/* cracks running from the corners toward the rim */}
+            <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+              {[
+                'M4 22 L26 34 L33 52 L52 61 L60 80 L71 86',
+                'M396 30 L370 44 L366 63 L349 70 L338 92',
+                'M366 63 L382 78',
+                'M12 384 L34 360 L52 357 L61 336 L82 326',
+                'M34 360 L30 340',
+                'M392 378 L371 366 L360 344 L338 338 L326 318',
+                'M200 0 L205 14 L198 26 L203 38',
+                'M0 210 L18 206 L27 214',
+              ].map((d) => (
+                <g key={d}>
+                  <path d={d} stroke="#9a948a" strokeWidth="1.1" opacity="0.25" transform="translate(0.8 0.8)" />
+                  <path d={d} stroke="#060605" strokeWidth="1.4" />
+                </g>
+              ))}
+            </g>
+          </g>
+        </svg>
       <div
         ref={galleryRef}
         className="liquid-gallery-stage"
@@ -818,6 +873,8 @@ export default function MemoryGallery() {
         {/* Silvery memory mist swirling over the pool surface */}
         <div className="pensieve-mist" aria-hidden="true" />
         <div className="pensieve-mist pensieve-mist--2" aria-hidden="true" />
+        <div className="pensieve-ripples" aria-hidden="true" />
+        <div className="pensieve-gloss" aria-hidden="true" />
       </div>
       </div>
 

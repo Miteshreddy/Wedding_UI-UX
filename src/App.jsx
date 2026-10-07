@@ -11,7 +11,7 @@ import LoveConstellation from './components/LoveConstellation';
 import MagicalMap from './components/MagicalMap';
 import MemoryGallery from './components/MemoryGallery';
 import TimeKeeper from './components/TimeKeeper';
-import WeddingDetails from './components/WeddingDetails';
+import { Venue, DressCode, Registry } from './components/WeddingDetails';
 import Countdown from './components/Countdown';
 import RSVP from './components/RSVP';
 import FinalReveal from './components/FinalReveal';
@@ -125,28 +125,26 @@ export default function App() {
         {/* Scenes 2–8: Only rendered after envelope is opened */}
         {envelopeOpened && (
           <>
-            {/* Scene 2: The Love Constellation — Two orbits converging */}
+            {/* Our story and messages */}
             <LoveConstellation />
 
-            {/* Scene 3: The Magical Map — Hand-drawn cartography & footsteps */}
+            {/* Guest details & travel (Marauder's Map) */}
             <MagicalMap />
 
-            {/* Scene 4: Liquid Memory Gallery — Photographic Chronicle */}
+            {/* Memory pool */}
             <MemoryGallery />
 
-            {/* Scene 5: The TimeKeeper — Interactive antique clock */}
+            {/* The single event timeline */}
             <TimeKeeper />
 
-            {/* Venue, dress code & registry */}
-            <WeddingDetails />
+            <Venue />
+            <DressCode />
+            <Registry />
 
-            {/* Scene 6: Astronomical Orrery Countdown */}
-            <Countdown />
-
-            {/* Scene 7: Tactile Parchment RSVP & stamped seal */}
             <RSVP />
 
-            {/* Scene 8: Cinematic Final Reveal */}
+            {/* Save the Date: countdown, then the closing names and footer */}
+            <Countdown />
             <FinalReveal />
           </>
         )}

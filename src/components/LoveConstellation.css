@@ -274,3 +274,16 @@
   }
   .constellation-caption { left: 34%; }
 }
+
+.milestone-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: 50% 25%;
+  margin: 0.5rem 0 0.4rem;
+  border-radius: 3px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+@media (max-width: 767px) { .milestone-photo { aspect-ratio: 16 / 8; } }
+.couple-photo--empty { background: radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.25), rgba(12, 9, 16, 0.95)); }

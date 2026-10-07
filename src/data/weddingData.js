@@ -58,6 +58,29 @@ export const WEDDING = {
     email: 'rsvp@evelynandadrian.com',
     maxGuests: 4,
   },
+  // Guest details & travel: each stop is a point the footsteps reach on the map
+  travel: [
+    {
+      kicker: 'Arriving by air',
+      title: 'Edinburgh Airport',
+      lines: ['Airlink 100 bus or the tram into the city (about 30 min)', 'Taxis from the rank outside arrivals, about £25'],
+    },
+    {
+      kicker: 'Arriving by train',
+      title: 'Edinburgh Waverley',
+      lines: ['Direct trains from London King’s Cross (4 hrs 20)', 'A 10-minute walk up to the Royal Mile'],
+    },
+    {
+      kicker: 'Where to stay',
+      title: 'Rooms held for our guests',
+      lines: ['The Balmoral · Hotel du Vin · Radisson Royal Mile', 'Quote “ASHCROFT-BLACKWOOD” · book by 1 September'],
+    },
+    {
+      kicker: 'On the night',
+      title: 'Getting to the Great Hall',
+      lines: ['Shuttle from all three hotels at 3:00 PM', 'Carriages home from 11:30 PM · very limited parking'],
+    },
+  ],
   details: {
     venue: {
       name: 'The Grand Hall',

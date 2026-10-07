@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { sound } from '../utils/audioSystem';
 import SectionHeader from './SectionHeader';
+import { WEDDING } from '../data/weddingData';
 import './MagicalMap.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,60 +14,33 @@ const MAP_PATH =
   'M 60 520 C 90 470 140 440 160 390 C 180 340 130 280 180 220 C 220 170 280 140 330 110 C 390 80 430 120 420 170 C 400 240 330 280 360 340 C 390 400 440 430 380 490 C 350 520 280 540 240 560';
 
 // Milestone stops along the path
-const MAP_STOPS = [
-  {
-    t: 0.12,
-    date: '14.02.2021',
-    place: 'St. Andrews Coast',
-    note: 'Where two paths first intertwined under winter tides',
-    x: 160,
-    y: 390,
-  },
-  {
-    t: 0.38,
-    date: '27.08.2022',
-    place: 'The Highland Mists',
-    note: 'An adventure into ancient pine valleys and high peaks',
-    x: 330,
-    y: 110,
-  },
-  {
-    t: 0.65,
-    date: '06.05.2024',
-    place: 'Arthur’s Seat',
-    note: 'A quiet summit over the city, and a question asked',
-    x: 360,
-    y: 340,
-  },
-  {
-    t: 0.92,
-    date: '31.10.2026',
-    place: 'The Grand Hall',
-    note: 'Where forever begins in candlelight and joy',
-    x: 240,
-    y: 560,
-  },
+const STOP_POSITIONS = [
+  { t: 0.12, x: 160, y: 390 },
+  { t: 0.38, x: 330, y: 110 },
+  { t: 0.65, x: 360, y: 340 },
+  { t: 0.92, x: 240, y: 560 },
 ];
+// Guest details & travel: each footstep stop reveals practical information
+const MAP_STOPS = WEDDING.travel.map((info, i) => ({ ...info, ...STOP_POSITIONS[i] }));
 
-// Marauder's Map–style footsteps, sampled along the route so each print
-// faces the direction of travel and alternates left/right of the path.
-const STEP_SPACING = 15;
+// Marauder's Map footsteps: distinct left and right boot prints, alternating
+// in pairs along the route and turned to face the direction of travel.
+const STRIDE = 36;
 function buildFootsteps() {
   if (typeof document === 'undefined') return [];
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   path.setAttribute('d', MAP_PATH);
   const total = path.getTotalLength();
   const steps = [];
-  for (let d = 6, i = 0; d < total - 2; d += STEP_SPACING, i++) {
+  for (let d = 8, i = 0; d < total - 4; d += STRIDE / 2, i++) {
     const p = path.getPointAtLength(d);
     const q = path.getPointAtLength(Math.min(total, d + 1));
     const ang = Math.atan2(q.y - p.y, q.x - p.x);
     const isLeft = i % 2 === 0;
-    const off = isLeft ? -3.2 : 3.2;
+    const off = isLeft ? -4.6 : 4.6;
     steps.push({
       x: p.x + Math.cos(ang + Math.PI / 2) * off,
       y: p.y + Math.sin(ang + Math.PI / 2) * off,
-      // prints are drawn pointing "up" (-y); rotate to face travel direction
       rot: (ang * 180) / Math.PI + 90,
       isLeft,
       t: (d / total) * 0.92,
@@ -144,7 +118,7 @@ export default function MagicalMap() {
           },
           step.t
         );
-        tl.to(fp, { opacity: 0.45, duration: 0.06, ease: 'none' }, step.t + 0.04);
+        tl.to(fp, { opacity: 0.62, duration: 0.06, ease: 'none' }, step.t + 0.04);
       });
 
       // 3. Reveal milestone markers with handwritten annotations.
@@ -191,13 +165,13 @@ export default function MagicalMap() {
       id="map"
       ref={sectionRef}
       className="map-section scene"
-      aria-label="Hand-drawn map of their journey"
+      aria-label="Guest details and travel map"
     >
       <div ref={introRef} className="scene-intro scene-intro--map">
         <SectionHeader
-          kicker="Chapter Two"
-          title="The Marauder’s Map"
-          subtitle="Follow our footsteps across Scotland, from the first hello to the Great Hall."
+          kicker="Guest Details & Travel"
+          title="Finding Your Way to Us"
+          subtitle="Follow the footsteps: how to arrive, where to stay, and how to reach the Great Hall."
         />
         <span className="scene-intro-cue" aria-hidden="true">↓</span>
       </div>
@@ -306,7 +280,7 @@ export default function MagicalMap() {
             fontStyle="italic"
             fill="rgba(80, 55, 20, 0.7)"
           >
-            Messrs. Evelyn &amp; Adrian present: The Map of Their Story
+            Messrs. Evelyn &amp; Adrian present: The Guest’s Map to the Great Hall
           </text>
         </g>
 
@@ -493,10 +467,10 @@ export default function MagicalMap() {
             opacity="0"
             className="map-footprint"
           >
-            <g fill="#3a230c" transform={step.isLeft ? 'scale(-1,1)' : undefined}>
-              {/* sole + heel of a small boot print */}
-              <path d="M0.3 -6.2 C2.4 -6.2 2.9 -3.6 2.5 -1.6 C2.2 -0.2 1.4 0.4 0.2 0.4 C-1.2 0.4 -2 -0.6 -2 -2.2 C-2 -4.4 -1.4 -6.2 0.3 -6.2 Z" />
-              <ellipse cx="0.1" cy="3.4" rx="1.7" ry="2" />
+            <g fill="#2a1708" transform={step.isLeft ? 'scale(-1,1)' : undefined}>
+              {/* boot sole (toe at the top, instep curve on the inside) + separate heel */}
+              <path d="M0.6 -8.4 C3.4 -8.4 4.2 -5.4 3.8 -2.6 C3.5 -0.6 2.6 0.6 0.8 0.8 C-1.2 1 -2.6 -0.2 -2.6 -2.2 C-2.6 -3.6 -1.6 -4.2 -1.7 -5.6 C-1.8 -7.4 -1 -8.4 0.6 -8.4 Z" />
+              <path d="M-1.9 3 C-1.9 2 -0.9 1.8 0.4 1.8 C1.8 1.8 2.6 2.2 2.6 3.2 C2.6 5.4 1.6 6.8 0.3 6.8 C-1.1 6.8 -1.9 5.2 -1.9 3 Z" />
             </g>
           </g>
         ))}
@@ -514,6 +488,17 @@ export default function MagicalMap() {
               strokeWidth="1"
             />
             <circle cx="0" cy="0" r="2" fill="#1a1209" />
+            <text
+              x="0"
+              y="22"
+              textAnchor="middle"
+              fontSize="10"
+              fontFamily="'IM Fell English', serif"
+              fontStyle="italic"
+              fill="#4a2a0c"
+            >
+              {['Airport', 'Waverley', 'Hotels', 'The Great Hall'][i]}
+            </text>
           </g>
         ))}
       </svg>
@@ -525,13 +510,16 @@ export default function MagicalMap() {
             key={i}
             ref={(el) => (stopsRef.current[i] = el)}
             className={`map-card map-card--${i} map-card--rotate-${i % 2 === 0 ? 'neg' : 'pos'}`}
-            aria-label={`${stop.date} at ${stop.place}: ${stop.note}`}
+            aria-label={`${stop.kicker}: ${stop.title}`}
           >
+            <span className="map-card-step t-display" aria-hidden="true">{i + 1}</span>
             <div className="map-card-header">
-              <span className="map-card-date t-handwritten">{stop.date}</span>
-              <span className="map-card-tag t-serif">{stop.place}</span>
+              <span className="map-card-tag t-display">{stop.kicker}</span>
             </div>
-            <p className="map-card-note t-ink">"{stop.note}"</p>
+            <h3 className="map-card-title t-display">{stop.title}</h3>
+            {stop.lines.map((l) => (
+              <p key={l} className="map-card-note t-serif">{l}</p>
+            ))}
           </div>
         ))}
       </div>
@@ -543,8 +531,8 @@ export default function MagicalMap() {
         aria-live="polite"
       >
         <span className="lead-spark" aria-hidden="true">✦</span>
-        <p className="lead-text t-handwritten">follow the photographs</p>
-        <p className="lead-sub t-ink">their memories await…</p>
+        <p className="lead-text t-handwritten">mischief managed</p>
+        <p className="lead-sub t-ink">see you at the Great Hall</p>
       </div>
     </section>
   );

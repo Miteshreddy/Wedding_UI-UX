@@ -73,3 +73,50 @@
 .details-photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: sepia(0.25) saturate(0.85) brightness(0.9); }
 .details-photo figcaption { position: absolute; right: 0; bottom: 0; padding: 0.15rem 0.4rem; background: rgba(10, 8, 12, 0.6); font-size: 0.6rem; }
 .details-photo figcaption a { color: var(--parchment-dark); text-decoration: none; opacity: 0.8; }
+
+/* ─── Venue feature ─── */
+.venue-card {
+  width: 100%;
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(160deg, rgba(28, 21, 34, 0.92), rgba(14, 10, 18, 0.95));
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+}
+.venue-photo { position: relative; margin: 0; min-height: 260px; }
+.venue-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.venue-photo figcaption { position: absolute; right: 0; bottom: 0; padding: 0.2rem 0.5rem; background: rgba(10, 8, 12, 0.65); font-size: 0.62rem; }
+.venue-photo figcaption a { color: var(--parchment-dark); text-decoration: none; }
+.venue-body { display: flex; flex-direction: column; justify-content: center; gap: 1.2rem; padding: clamp(1.2rem, 4vw, 2rem); }
+.venue-directions {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 50px;
+  padding: 0 1.6rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #f7e7b4;
+  background: linear-gradient(180deg, #8c0a0b, #5e0001);
+  border: 1px solid #c9a84c;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(94, 0, 1, 0.4);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.venue-directions:hover, .venue-directions:focus-visible { transform: translateY(-2px); background: linear-gradient(180deg, #a10f10, #6e0102); }
+@media (max-width: 720px) {
+  .venue-card { grid-template-columns: 1fr; }
+  .venue-photo { aspect-ratio: 16 / 10; min-height: 0; }
+  .venue-directions { align-self: stretch; justify-content: center; }
+}
+
+/* Dress code & registry: compact, connected to the RSVP below */
+.details-section--tight { padding-top: clamp(1.6rem, 4vh, 2.6rem); padding-bottom: clamp(0.8rem, 2vh, 1.4rem); }
+.details-section--tight .section-header { margin-bottom: 1rem; }
+.details-card--wide { width: 100%; max-width: 640px; }

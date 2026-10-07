@@ -4,6 +4,7 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 import { WEDDING } from '../data/weddingData';
 import { sound } from '../utils/audioSystem';
 import DeathlyHallows from './DeathlyHallows';
+import HallowsPortrait from './HallowsPortrait';
 import { canvasDpr, scaled, visibilityGate, IS_LOW_POWER } from '../utils/perf';
 import './EnvelopeIntro.css';
 
@@ -834,7 +835,7 @@ export default function EnvelopeIntro({ onComplete }) {
         <div ref={inkTextRef} className="parchment-ink-container" aria-live="polite">
           {/* Deathly Hallows sigil */}
           <div className="ink-script-line ink-hallows">
-            <DeathlyHallows size={64} strokeWidth={2} title="Deathly Hallows" />
+            <HallowsPortrait className="ink-portrait" />
           </div>
 
           {/* Small pre-title */}

@@ -1281,3 +1281,8 @@
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .letter-emblem-small { color: #9a1b1b; opacity: 1; }
+
+/* Hero portrait: the couple inside the Hallows, above their names */
+.ink-portrait { --hp-size: clamp(130px, 34vw, 190px); }
+@media (max-height: 700px) { .ink-portrait { --hp-size: clamp(110px, 24svh, 150px); } }
+.ink-hallows { margin-bottom: 0.6rem; }

@@ -6,10 +6,10 @@ import './NavBar.css';
 
 export const NAV_ITEMS = [
   { id: 'story', label: 'Our Story' },
-  { id: 'map', label: 'The Map' },
+  { id: 'map', label: 'Travel' },
   { id: 'memories', label: 'Pensieve' },
   { id: 'schedule', label: 'The Day' },
-  { id: 'details', label: 'Details' },
+  { id: 'venue', label: 'Venue' },
   { id: 'rsvp', label: 'RSVP' },
 ];
 

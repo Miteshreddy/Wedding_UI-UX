@@ -206,7 +206,7 @@ export default function Countdown() {
       className="countdown-section scene"
       aria-label="Countdown to the Wedding Day"
     >
-      <SectionHeader kicker="Until we say “I do”" title="The Final Countdown" />
+      <SectionHeader kicker="Save the Date" title="Our Countdown to Forever" subtitle="We can’t wait to celebrate with you." />
       {/* Background Starfield Atmosphere */}
       <canvas ref={canvasRef} className="countdown-wisp-canvas fill-parent" aria-hidden="true" />
 
@@ -355,9 +355,7 @@ export default function Countdown() {
             <button type="button" className="countdown-btn t-display" onClick={downloadCalendarInvite}>
               Add to calendar
             </button>
-            <button type="button" className="countdown-btn countdown-btn--primary t-display" onClick={() => scrollToSection('rsvp')}>
-              RSVP now
-            </button>
+
           </div>
         </footer>
       </div>

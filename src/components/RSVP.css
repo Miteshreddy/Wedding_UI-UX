@@ -175,3 +175,7 @@
   cursor: pointer;
 }
 .rsvp-link-btn:hover { background: rgba(116, 0, 1, 0.08); }
+
+/* Connected to Dress Code / Registry above and the countdown below */
+.rsvp-section { padding-top: clamp(1.6rem, 4vh, 2.6rem); padding-bottom: clamp(1rem, 3vh, 2rem); }
+.rsvp-section .section-header { margin-bottom: 1rem; }
