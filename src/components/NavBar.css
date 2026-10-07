@@ -112,3 +112,6 @@
    trap the fixed mobile menu) */
 .site-nav { transition: background 0.35s ease, box-shadow 0.35s ease, opacity 0.4s ease, visibility 0.4s; }
 .site-nav--hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Menu lines centred inside the round button */
+.nav-burger { align-items: center; justify-content: center; padding: 0; }
